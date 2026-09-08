@@ -526,14 +526,21 @@
 <section>
   <div class="wrap">
     <div class="signup-box">
-      <p><strong>Want new tutorials in your inbox?</strong><br>No spam, no automation yet — just an email when a new video or SecurityAuditAI feature drops.</p>
-      <form id="subscribe-form" style="display:flex;gap:10px;flex-wrap:wrap;">
-        <input type="email" id="subscribe-email" placeholder="you@example.com" required
-          style="padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:0.9rem;min-width:220px;">
-        <button type="submit" class="btn-primary" style="border:none;cursor:pointer;">Subscribe</button>
-      </form>
+      <div>
+        <p style="margin-bottom:6px;"><strong>Get the free checklist + new tutorials in your inbox</strong></p>
+        <p>The 5-Minute Repo Security Checklist — a quick manual pass to run before you push. No spam, no automation, just updates when something new drops.</p>
+        <form action="https://buttondown.com/api/emails/embed-subscribe/ciphercapital" method="post" target="popupwindow"
+          onsubmit="window.open('https://buttondown.com/ciphercapital', 'popupwindow')"
+          style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+          <input type="email" name="email" placeholder="you@example.com" required
+            style="flex:1;min-width:200px;padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
+          <input type="submit" value="Subscribe" class="btn-primary" style="border:none;cursor:pointer;">
+        </form>
+        <p style="margin-top:14px;font-size:0.85rem;">
+          <a href="assets/5-minute-repo-security-checklist.pdf" target="_blank">Or just grab the checklist directly, no signup needed →</a>
+        </p>
+      </div>
     </div>
-    <p id="subscribe-status" class="mono" style="margin-top:10px;color:var(--muted);font-size:0.85rem;"></p>
   </div>
 </section>
 
@@ -648,23 +655,6 @@
     } catch (err) {
       status.textContent = '⚠ Could not reach the scan service. Try again shortly.';
       btn.disabled = false;
-    }
-  });
-  document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const status = document.getElementById('subscribe-status');
-    const email = document.getElementById('subscribe-email').value;
-    status.textContent = 'Subscribing...';
-    try {
-      const res = await fetch(`${API_URL}/subscribe`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      const data = await res.json();
-      status.textContent = res.ok ? ('✓ ' + data.message) : ('⚠ ' + (data.detail || 'Something went wrong.'));
-    } catch (err) {
-      status.textContent = '⚠ Could not reach the server. Try again shortly.';
     }
   });
 </script>
