@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="assets/logo.png">
 <style>
   :root {
     --bg: #282a36;
@@ -57,11 +58,15 @@
     align-items: center;
   }
   .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
     font-size: 1.1rem;
     color: var(--fg);
   }
+  .logo img { height: 32px; width: 32px; }
   .logo span { color: var(--green); }
   .nav-cta {
     font-family: 'JetBrains Mono', monospace;
@@ -354,7 +359,7 @@
 
 <nav>
   <div class="wrap">
-    <div class="logo">Cipher<span>Capital</span></div>
+    <div class="logo"><img src="assets/logo.png" alt="CipherCapital logo">Cipher<span>Capital</span></div>
     <a class="nav-cta" href="#scan">Free Security Audit</a>
   </div>
 </nav>
@@ -524,7 +529,10 @@
         <a href="mailto:secrapports@outlook.com">secrapports@outlook.com</a>
       </div>
     </div>
-    <div class="footer-note">// built by CipherCapital — no ads, no tracking, just security</div>
+    <div class="footer-note" style="display:flex;align-items:center;gap:8px;">
+      <img src="assets/logo.png" alt="" style="height:16px;width:16px;opacity:0.7;">
+      built by CipherCapital — no ads, no tracking, just security
+    </div>
   </div>
 </footer>
 
