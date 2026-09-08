@@ -513,9 +513,14 @@
 <section>
   <div class="wrap">
     <div class="signup-box">
-      <p><strong>Want new tutorials in your inbox?</strong><br>No spam, no automation yet — just reply-worthy emails when a new video or SecurityAuditAI feature drops.</p>
-      <a class="btn-secondary" href="mailto:secrapports@outlook.com?subject=Keep%20me%20updated">Get in touch</a>
+      <p><strong>Want new tutorials in your inbox?</strong><br>No spam, no automation yet — just an email when a new video or SecurityAuditAI feature drops.</p>
+      <form id="subscribe-form" style="display:flex;gap:10px;flex-wrap:wrap;">
+        <input type="email" id="subscribe-email" placeholder="you@example.com" required
+          style="padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:0.9rem;min-width:220px;">
+        <button type="submit" class="btn-primary" style="border:none;cursor:pointer;">Subscribe</button>
+      </form>
     </div>
+    <p id="subscribe-status" class="mono" style="margin-top:10px;color:var(--muted);font-size:0.85rem;"></p>
   </div>
 </section>
 
@@ -630,6 +635,23 @@
     } catch (err) {
       status.textContent = '⚠ Could not reach the scan service. Try again shortly.';
       btn.disabled = false;
+    }
+  });
+  document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = document.getElementById('subscribe-status');
+    const email = document.getElementById('subscribe-email').value;
+    status.textContent = 'Subscribing...';
+    try {
+      const res = await fetch(`${API_URL}/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      status.textContent = res.ok ? ('✓ ' + data.message) : ('⚠ ' + (data.detail || 'Something went wrong.'));
+    } catch (err) {
+      status.textContent = '⚠ Could not reach the server. Try again shortly.';
     }
   });
 </script>
