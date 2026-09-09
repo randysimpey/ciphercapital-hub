@@ -659,7 +659,7 @@
         updateProgressUI('queued');
         pollJob(data.job_id);
       } else {
-        status.textContent = '⚠ ' + (data.detail || 'Something went wrong.');
+        status.textContent = '⚠ ' + formatErrorDetail(data.detail);
         btn.disabled = false;
       }
     } catch (err) {
@@ -667,6 +667,16 @@
       btn.disabled = false;
     }
   });
+
+  function formatErrorDetail(detail) {
+    if (!detail) return 'Something went wrong.';
+    if (typeof detail === 'string') return detail;
+    if (Array.isArray(detail)) {
+      // FastAPI/Pydantic validation errors: array of {loc, msg, type}
+      return detail.map(d => d.msg || JSON.stringify(d)).join(' — ');
+    }
+    return JSON.stringify(detail);
+  }
 </script>
 
 </body>
