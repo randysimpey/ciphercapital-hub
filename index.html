@@ -518,7 +518,8 @@
           <li>Auto-remediation code snippets</li>
         </ul>
         <a href="https://buy.stripe.com/5kQ28q4cz7HMgnMaoF1sQ00" target="_blank" rel="noopener"
-          class="btn-primary" style="display:block;text-align:center;margin-top:18px;text-decoration:none;">Upgrade to Pro</a>
+          class="btn-primary" style="display:block;text-align:center;margin-top:18px;text-decoration:none;"
+          onclick="gtag('event','upgrade_click',{'event_category':'conversion','event_label':'pro'});">Upgrade to Pro</a>
       </div>
       <div class="price-card">
         <div class="price-name">Business</div>
@@ -529,7 +530,8 @@
           <li>SOC 2 / GDPR-ready compliance reports</li>
         </ul>
         <a href="https://buy.stripe.com/3cI9AS5gD3rw9Zo68p1sQ01" target="_blank" rel="noopener"
-          class="btn-secondary" style="display:block;text-align:center;margin-top:18px;text-decoration:none;">Upgrade to Business</a>
+          class="btn-secondary" style="display:block;text-align:center;margin-top:18px;text-decoration:none;"
+          onclick="gtag('event','upgrade_click',{'event_category':'conversion','event_label':'business'});">Upgrade to Business</a>
       </div>
     </div>
   </div>
@@ -566,14 +568,14 @@
         <p style="margin-bottom:6px;"><strong>Get the free checklist + new tutorials in your inbox</strong></p>
         <p>The 5-Minute Repo Security Checklist — a quick manual pass to run before you push. No spam, no automation, just updates when something new drops.</p>
         <form action="https://buttondown.com/api/emails/embed-subscribe/ciphercapital" method="post" target="popupwindow"
-          onsubmit="window.open('https://buttondown.com/ciphercapital', 'popupwindow')"
+          onsubmit="gtag('event','newsletter_signup',{'event_category':'conversion'}); window.open('https://buttondown.com/ciphercapital', 'popupwindow')"
           style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
           <input type="email" name="email" placeholder="you@example.com" required
             style="flex:1;min-width:200px;padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:0.9rem;">
           <input type="submit" value="Subscribe" class="btn-primary" style="border:none;cursor:pointer;">
         </form>
         <p style="margin-top:14px;font-size:0.85rem;">
-          <a href="assets/5-minute-repo-security-checklist.pdf" target="_blank">Or just grab the checklist directly, no signup needed →</a>
+          <a href="assets/5-minute-repo-security-checklist.pdf" target="_blank" onclick="gtag('event','checklist_download',{'event_category':'conversion'});">Or just grab the checklist directly, no signup needed →</a>
         </p>
       </div>
     </div>
@@ -630,6 +632,10 @@
   };
   const STAGE_ORDER = ["cloning", "scanning_secrets", "scanning_dependencies", "emailing"];
 
+  // FIX: voorkomt dubbele 'scan_completed' events als pollJob per ongeluk
+  // meerdere keren een 'done' status zou tegenkomen (defensief, kost niets).
+  let scanCompletedTracked = false;
+
   function updateProgressUI(stage) {
     const log = document.getElementById('progress-log');
     log.textContent = STAGE_LABELS[stage] || stage;
@@ -652,6 +658,14 @@
           document.getElementById('progress-log').textContent =
             `Done — ${job.summary?.secrets ?? 0} secrets, ${job.summary?.vulnerabilities ?? 0} vulnerabilities, ${job.summary?.misconfigurations ?? 0} IaC issues found. Report emailed.`;
           document.querySelectorAll('.progress-steps .seg').forEach(seg => seg.classList.add('active'));
+          // Track: scan daadwerkelijk voltooid (niet alleen gestart)
+          if (!scanCompletedTracked) {
+            scanCompletedTracked = true;
+            gtag('event', 'scan_completed', {
+              'event_category': 'conversion',
+              'event_label': 'hub_page_scan_widget'
+            });
+          }
           return;
         }
         if (job.status === 'failed') {
@@ -683,6 +697,12 @@
         status.textContent = '';
         document.getElementById('scan-progress').style.display = 'block';
         updateProgressUI('queued');
+        // Track: scan daadwerkelijk gestart (backend heeft de job geaccepteerd,
+        // dit is dus een echte start, geen mislukte poging of validatiefout)
+        gtag('event', 'start_free_scan', {
+          'event_category': 'conversion',
+          'event_label': 'hub_page_scan_widget'
+        });
         pollJob(data.job_id);
       } else {
         status.textContent = '⚠ ' + formatErrorDetail(data.detail);
