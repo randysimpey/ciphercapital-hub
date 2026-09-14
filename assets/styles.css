@@ -16,7 +16,7 @@ img{max-width:100%;display:block}.mono{font-family:var(--mono)}
 .site{position:sticky;top:0;z-index:20;background:rgba(244,246,248,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{display:flex;align-items:center;text-decoration:none;font:600 15px var(--mono)}
-.brand img{width:58px;height:58px;object-fit:contain;border-radius:7px}
+.brand img{width:46px;height:46px;border-radius:12px;object-fit:cover;box-shadow:0 8px 20px rgba(11,21,34,.10);transition:transform .45s var(--ease)}
 .navlinks{display:flex;gap:25px;font-size:14px;color:var(--muted)}
 .navlinks a{text-decoration:none}.navlinks a:hover{color:var(--ink)}
 .actions{display:flex;align-items:center;gap:10px}
@@ -641,3 +641,5 @@ body{overflow-x:clip}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   .hero .eyebrow,.hero h1,.hero .lead,.hero .ctas,.hero .micro,.hero .hero-visual{opacity:1;transform:none}
 }
+
+.dashboard-brand-logo{width:24px;height:24px;border-radius:6px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,.16)}
