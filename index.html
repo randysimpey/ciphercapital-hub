@@ -3,16 +3,20 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CipherCapital — Security intelligence that finds what matters</title><meta name="description" content="SecurityAuditAI finds exposed secrets, vulnerable dependencies and infrastructure misconfigurations — then helps you understand what matters first.">
-<meta name="theme-color" content="#101613"><link rel="icon" href="https://raw.githubusercontent.com/randysimpey/ciphercapital-hub/main/assets/logo.png" type="image/svg+xml">
+<meta name="theme-color" content="#0b1522"><link rel="icon" href="https://raw.githubusercontent.com/randysimpey/ciphercapital-hub/main/assets/logo.png" type="image/png">
 <link rel="stylesheet" href="assets/styles.css?v=2">
 <link rel="alternate" hreflang="en" href="https://randysimpey.github.io/ciphercapital-hub/">
 <link rel="alternate" hreflang="nl" href="https://randysimpey.github.io/ciphercapital-hub/nl/">
+
+<link rel="canonical" href="https://randysimpey.github.io/ciphercapital-hub/">
+<meta property="og:type" content="website"><meta property="og:title" content="CipherCapital — Security intelligence that finds what matters"><meta property="og:description" content="SecurityAuditAI finds exposed secrets, vulnerable dependencies and infrastructure misconfigurations — then helps you understand what matters first."><meta property="og:url" content="https://randysimpey.github.io/ciphercapital-hub/"><meta property="og:image" content="https://raw.githubusercontent.com/randysimpey/ciphercapital-hub/main/assets/logo.png">
+<meta name="twitter:card" content="summary"><meta name="twitter:title" content="CipherCapital — Security intelligence that finds what matters"><meta name="twitter:description" content="SecurityAuditAI finds exposed secrets, vulnerable dependencies and infrastructure misconfigurations — then helps you understand what matters first."><meta name="twitter:image" content="https://raw.githubusercontent.com/randysimpey/ciphercapital-hub/main/assets/logo.png">
 </head>
 <body>
-<div class="topbar">CIPHER CAPITAL · SECURITYAUDITAI · EVIDENCE FIRST · PRIORITY OVER NOISE</div>
+<div class="topbar">CIPHER CAPITAL · SECURITYAUDITAI · EVIDENCE FIRST · PRIORITY OVER NOISE <span style="float:right;opacity:.7">Press <b>⌘/Ctrl + K</b> to jump</span></div>
 <header class="site"><div class="wrap nav">
 <a class="brand" href=""><img src="https://raw.githubusercontent.com/randysimpey/ciphercapital-hub/main/assets/logo.png" alt="">CipherCapital</a>
-<nav class="navlinks"><a href="#product">SecurityAuditAI</a><a href="#coverage">Coverage</a><a href="#pricing">Pricing</a><a href="#tutorial">Tutorials</a></nav>
+<nav class="navlinks"><a href="#product">SecurityAuditAI</a><a href="#coverage">Coverage</a><a href="#demo">Demo</a><a href="#pricing">Pricing</a><a href="#tutorial">Tutorials</a></nav>
 <div class="actions"><a class="lang active" href="./">EN</a><a class="lang " href="../nl/">NL</a><a class="btn btn-dark" href="#scan">Run a free scan</a></div>
 </div></header>
 
@@ -41,7 +45,7 @@
 <section class="section darksection"><div class="wrap intelligence">
 <div><div class="eyebrow">CIPHER INTELLIGENCE</div><h2>Less noise. More signal.</h2><p class="muted">The long-term product direction is not another scanner. Existing scanners are sensors; CipherCapital adds the intelligence layer above them.</p>
 <div class="ctas"><a class="btn btn-amber" href="#scan">Run a free scan</a></div></div>
-<div class="callout"><div class="riskrow"><span class="pill hot">67NOW</span><span>Credential exposure in production path</span><span class="accent">NOW</span></div>
+<div class="callout"><div class="riskrow"><span class="pill hot">PRIORITY</span><span>Credential exposure in production path</span><span class="accent">NOW</span></div>
 <div class="riskrow"><span class="pill">RISK</span><span>Dependency finding with reachable impact</span><span>HIGH</span></div>
 <div class="riskrow"><span class="pill">CONTEXT</span><span>Finding correlated with infrastructure exposure</span><span>REVIEW</span></div>
 <div class="riskrow"><span class="pill">FIX</span><span>Suggested remediation and verification</span><span>NEXT</span></div></div>
@@ -76,6 +80,110 @@
 <div class="coderow"><span class="ln">88</span><span class="white">NEXT: rotate credential · upgrade package · harden image</span></div></div>
 </div></section>
 
+
+<section class="section ux-section" id="demo">
+  <div class="wrap ux-grid">
+    <div>
+      <div class="eyebrow">INTERACTIVE DEMO</div>
+      <h2>See the product logic before you hand it real code.</h2>
+      <p class="lead" style="font-size:16px">This demo is intentionally local and illustrative. It shows the experience — discover evidence, classify it, surface priority — without pretending a live repository was scanned.</p>
+      <div class="timeline">
+        <div class="timeline-item"><h3>01 — collect evidence</h3><p>Bring together secrets, dependency and infrastructure signals.</p></div>
+        <div class="timeline-item"><h3>02 — add context</h3><p>Ask what is exposed, reachable and relevant to the environment.</p></div>
+        <div class="timeline-item"><h3>03 — rank attention</h3><p>Turn a long finding list into a smaller, actionable queue.</p></div>
+      </div>
+    </div>
+    <div class="demo-shell">
+      <div class="demo-top"><div class="demo-dots"><i></i><i></i><i></i></div><div class="demo-label">SECURITYAUDITAI / DEMO</div></div>
+      <div class="demo-body">
+        <form class="demo-input" id="demoScanForm">
+          <input value="https://github.com/example/repository" aria-label="Repository URL">
+          <button class="btn btn-dark" type="submit">Run demo</button>
+        </form>
+        <div class="micro" style="margin-top:10px">Simulation only · no repository is fetched by this demo.</div>
+        <div class="demo-status">
+          <div class="scan-line"><span class="scan-state"></span>Resolve repository metadata</div>
+          <div class="scan-line"><span class="scan-state"></span>Inspect secrets signal</div>
+          <div class="scan-line"><span class="scan-state"></span>Inspect dependency signal</div>
+          <div class="scan-line"><span class="scan-state"></span>Inspect infrastructure signal</div>
+          <div class="scan-line"><span class="scan-state"></span>Build priority context</div>
+        </div>
+        <div class="demo-result">
+          <div class="result-score"><strong>78</strong><span>ILLUSTRATIVE<br>SECURITY SCORE</span></div>
+          <div class="micro" style="margin-top:6px">Demo result for <span id="demoRepoLabel">example/repository</span></div>
+          <div class="result-grid">
+            <div class="result-chip"><b>01</b><small>high attention</small></div>
+            <div class="result-chip"><b>04</b><small>review</small></div>
+            <div class="result-chip"><b>17</b><small>informational</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section darksection ux-section" id="architecture">
+  <div class="wrap">
+    <div class="sectionhead"><div><div class="eyebrow">HOW CIPHER FITS</div><h2>Security tools are the sensors. CipherCapital is the decision layer.</h2></div><p class="muted">The architecture is designed to grow without throwing away the tooling teams already use.</p></div>
+    <div class="architecture">
+      <div class="arch-node"><span class="num">01 / SENSORS</span><h3>Gitleaks</h3><p>Secrets and credential signals.</p><span class="arch-arrow">→</span></div>
+      <div class="arch-node"><span class="num">02 / SENSORS</span><h3>Trivy</h3><p>Dependencies and infrastructure signals.</p><span class="arch-arrow">→</span></div>
+      <div class="arch-node active"><span class="num">03 / INTELLIGENCE</span><h3>Cipher Intelligence</h3><p>Correlation, context and evidence.</p><span class="arch-arrow">→</span></div>
+      <div class="arch-node active"><span class="num">04 / PRIORITY</span><h3>PRIORITY</h3><p>What deserves attention first.</p><span class="arch-arrow">→</span></div>
+      <div class="arch-node"><span class="num">05 / ACTION</span><h3>Remediate</h3><p>Fix, verify and learn from the change.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section ux-section" id="findings">
+  <div class="wrap">
+    <div class="sectionhead"><div><div class="eyebrow">EVIDENCE-FIRST FINDINGS</div><h2>Click a finding. Get the “why”, not another wall of text.</h2></div><p>These examples are illustrative UI, designed to show how a production report can keep evidence close to the decision.</p></div>
+    <div class="findings-grid">
+      <article class="finding-card" data-title="Exposed credential" data-why="A credential can turn a code leak into an access problem. The next step should be to validate scope, rotate the secret and verify that the old value is no longer accepted." data-evidence="config/legacy.py:42\nTOKEN = \"••••••••••\"\n\ngitleaks: token-like credential detected">
+        <div class="finding-top"><span class="finding-tag">SECRETS · GITLEAKS</span><span class="pill hot">PRIORITY</span></div><h3>Exposed credential</h3><p>Evidence, likely impact and the first action stay in the same view.</p>
+      </article>
+      <article class="finding-card" data-title="Reachable dependency vulnerability" data-why="A vulnerable package matters more when the affected component is actually used in a reachable path. The report should surface package, version and evidence so the team can decide whether to upgrade, isolate or accept the risk." data-evidence="package.json\n\"package-name\": \"1.4.2\"\n\ntrivy: known vulnerability detected">
+        <div class="finding-top"><span class="finding-tag">DEPENDENCIES · TRIVY</span><span class="pill">HIGH</span></div><h3>Reachable dependency</h3><p>Move from CVE noise toward the package and version that deserve attention.</p>
+      </article>
+      <article class="finding-card" data-title="Container runs as root" data-why="A container running as root can increase the blast radius of a successful compromise. The report should point directly to the configuration and the hardening change to review." data-evidence="Dockerfile:12\nUSER root\n\ntrivy: container configuration check">
+        <div class="finding-top"><span class="finding-tag">INFRASTRUCTURE · TRIVY</span><span class="pill">REVIEW</span></div><h3>Container runs as root</h3><p>Show the exact configuration issue and connect it to a practical hardening step.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section ux-section" id="integrations">
+  <div class="wrap">
+    <div class="sectionhead"><div><div class="eyebrow">TOOLCHAIN</div><h2>Designed to fit the security workflow you already have.</h2></div><p>Show the ecosystem now, then connect deeper automation as those integrations are actually implemented.</p></div>
+    <div class="integration-grid">
+      <div class="integration"><div class="logolet">GITHUB</div><small>source & PR workflow</small></div>
+      <div class="integration"><div class="logolet">GITLEAKS</div><small>secret detection</small></div>
+      <div class="integration"><div class="logolet">TRIVY</div><small>vuln & config scan</small></div>
+      <div class="integration"><div class="logolet">DOCKER</div><small>image context</small></div>
+      <div class="integration"><div class="logolet">K8S</div><small>cluster config</small></div>
+      <div class="integration"><div class="logolet">CI/CD</div><small>automation layer</small></div>
+    </div>
+  </div>
+</section>
+
+<section class="section ux-section" id="trust">
+  <div class="wrap">
+    <div class="sectionhead"><div><div class="eyebrow">TRUST & TRANSPARENCY</div><h2>Useful precisely because it does not pretend to do more than it does.</h2></div><p>Clear boundaries make a security product easier to trust and easier to improve.</p></div>
+    <div class="trust-grid">
+      <div class="trust-card"><div class="trust-icon">01</div><h3>Evidence over theatre</h3><p>Findings should point back to a file, configuration, package or other concrete evidence whenever the underlying scanner provides it.</p></div>
+      <div class="trust-card"><div class="trust-icon">02</div><h3>No “certified secure” button</h3><p>A scan is an assessment aid. It is not a guarantee that an application is secure, vulnerability-free or compliant.</p></div>
+      <div class="trust-card"><div class="trust-icon">03</div><h3>Verify the backend claims</h3><p>Temporary storage, retention, deletion and privacy statements should match what the production system actually does before they are treated as guarantees.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="findingModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <div class="modal-head"><div><div class="eyebrow">FINDING DETAIL</div><h3 data-modal-title style="margin-top:5px"></h3></div><button class="modal-close" aria-label="Close">×</button></div>
+    <div class="modal-content" data-modal-body></div>
+  </div>
+</div>
+
 <section class="section" id="pricing"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">PLANS</div><h2>Start free. Scale when the workflow proves useful.</h2></div><p>Transparent pricing with the existing CipherCapital plans. Checkout is handled by Stripe.</p></div>
 <div class="pricing">
 <div class="price"><div class="name">Free</div><div class="amount">$0</div><ul><li>1 scan/month</li><li>Report by email</li><li>No card required</li></ul><a class="btn btn-light" href="#scan">Start</a></div>
@@ -90,6 +198,23 @@
 <section class="section" id="tutorial"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">YOUTUBE</div><h2>See the checks before you buy the tool.</h2></div><p>Every tutorial is intended to be practical: real issue, real code, real commands and a path to automation.</p></div>
 <div class="panel" style="padding:35px"><div class="eyebrow" style="color:#9eaea5">LATEST VIDEO</div><h3 style="font-size:28px;margin-top:12px">CipherCapital security tutorials</h3><p style="color:#aab7b0">The live video feed belongs on the channel, not in a fake placeholder embed.</p><a class="btn btn-amber" href="https://www.youtube.com/@CipherCapitalCap">Open YouTube channel →</a></div></div></section>
 
+<section class="cipher-story" aria-label="Cipher Intelligence">
+  <div class="cipher-story__sticky">
+    <div class="cipher-story__stage">
+      <div class="cipher-story__copy">
+        <div class="eyebrow">CIPHER INTELLIGENCE</div>
+        <div class="cipher-story__step is-active"><h2>See what connects.</h2><p>A single finding rarely tells the whole story. Cipher Intelligence connects signals into one understandable security context.</p></div>
+        <div class="cipher-story__step"><h2>Understand what is dangerous.</h2><p>exposure, exploitability and context combine into one priority — so noise does not control your day.</p></div>
+        <div class="cipher-story__step"><h2>Act where it matters.</h2><p>Move from finding to concrete remediation. Fix what can actually create impact first.</p></div>
+      </div>
+      <div class="cipher-story__visual" aria-hidden="true">
+        <div class="cipher-orbit"></div><div class="cipher-orbit"></div><div class="cipher-orbit"></div>
+        <span class="cipher-node"></span><span class="cipher-node"></span><span class="cipher-node"></span><span class="cipher-node"></span>
+        <div class="cipher-core">RISK</div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="section"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">FAQ</div><h2>Before you run a scan.</h2></div></div><div class="faq">
 <details><summary>Is repository code stored?</summary><p>The site currently describes repository content as being cloned to temporary storage for scanning and deleted after the scan. This should remain true in the actual backend before making the claim a production guarantee.</p></details>
 <details><summary>Does the free scan support private repositories?</summary><p>The current free workflow is for public repositories. Private repository support is positioned for paid workflows.</p></details>
@@ -100,23 +225,7 @@
 
 <section class="final"><div class="wrap"><div class="finalbox"><div><div class="eyebrow" style="color:#9eaea5">READY WHEN YOU ARE</div><h2 style="color:#fff;margin-top:10px">Find the issues worth fixing.</h2><p>Start with a free repository scan, follow the evidence, and use the result to decide what deserves attention first.</p></div><a class="btn btn-amber" href="#scan">Run a free scan →</a></div></div></section>
 
-<section class="cipher-story" aria-label="Cipher Intelligence">
-  <div class="cipher-story__sticky">
-    <div class="cipher-story__stage">
-      <div class="cipher-story__copy">
-        <div class="eyebrow">CIPHER INTELLIGENCE</div>
-        <div class="cipher-story__step is-active"><h2>See what connects.</h2><p>A single finding rarely tells the whole story. Cipher Intelligence connects signals into one understandable security context.</p></div>
-        <div class="cipher-story__step"><h2>Understand what is dangerous.</h2><p>67NOW, exposure, exploitability and context combine into one priority — so noise does not control your day.</p></div>
-        <div class="cipher-story__step"><h2>Act where it matters.</h2><p>Move from finding to concrete remediation. Fix what can actually create impact first.</p></div>
-      </div>
-      <div class="cipher-story__visual" aria-hidden="true">
-        <div class="cipher-orbit"></div><div class="cipher-orbit"></div><div class="cipher-orbit"></div>
-        <span class="cipher-node"></span><span class="cipher-node"></span><span class="cipher-node"></span><span class="cipher-node"></span>
-        <div class="cipher-core">67NOW</div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 </main>
 <footer><div class="wrap"><div class="footer"><a class="brand" href="#"><img src="https://raw.githubusercontent.com/randysimpey/ciphercapital-hub/main/assets/logo.png" alt="CipherCapital"></a><div class="footerlinks"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://www.youtube.com/@CipherCapitalCap">YouTube</a><a href="https://instagram.com/ciphercapitalreall">Instagram</a><a href="https://tiktok.com/@ciphercapital">TikTok</a><a href="mailto:secrapports@outlook.com">Contact</a></div></div><div class="legal">Built by CipherCapital · Security-first · Privacy-conscious · Developer-focused</div></div></footer>
