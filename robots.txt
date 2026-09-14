@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://randysimpey.github.io/ciphercapital-hub/sitemap.xml
