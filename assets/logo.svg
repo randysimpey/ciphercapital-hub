@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
-<title>CipherCapital</title><desc>Minimal CipherCapital shield mark</desc>
-<rect width="64" height="64" rx="14" fill="#111714"/>
-<path d="M32 9 49 16v14c0 12-7.4 20.4-17 25-9.6-4.6-17-13-17-25V16l17-7Z" fill="none" stroke="#f2b45b" stroke-width="3"/>
-<path d="M39 21.5c-2-1.7-4.4-2.5-7-2.5-7 0-12 5.1-12 11.5S25 42 32 42c2.6 0 5-.8 7-2.5" fill="none" stroke="#f2b45b" stroke-width="3.5" stroke-linecap="round"/>
-<path d="M21 30.5h13" stroke="#f2b45b" stroke-width="3.5" stroke-linecap="round"/>
-</svg>
