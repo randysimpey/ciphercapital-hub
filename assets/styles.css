@@ -643,3 +643,10 @@ body{overflow-x:clip}
 }
 
 .dashboard-brand-logo{width:24px;height:24px;border-radius:6px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,.16)}
+
+.service-note{padding:15px 18px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.72);color:#738293;font-size:13px;line-height:1.6}
+#assessments .pricing{max-width:900px}
+#assessments .price{min-height:390px}
+@media(max-width:1120px){
+  .pricing{grid-template-columns:repeat(2,1fr)}
+}

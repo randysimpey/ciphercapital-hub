@@ -1,20 +1,18 @@
-CipherCapital — FINAL premium static website
+CipherCapital commercial ladder update
 
-This build is self-contained for the logo and shared motion assets.
+The site now presents a clear product ladder:
+- Free scan: €0
+- SecurityAuditAI Pro: $49/mo
+- SecurityAuditAI Business: $199/mo
+- Security Assessment: from €199
+- Deep Security Assessment: custom scope/pricing
 
-Highlights:
-- Apple-inspired visual rhythm and scroll-driven motion.
-- Sticky storytelling and animated Cipher Intelligence section.
-- Local vector logo.svg + favicon.svg (no remote logo dependency).
-- Premium micro-interactions, card depth, pointer light and subtle parallax.
-- Interactive illustrative security audit demo.
-- Evidence-first findings explorer.
-- Command palette: Cmd/Ctrl + K.
-- Motion toggle + prefers-reduced-motion support.
-- EN + NL pages.
-- Existing Stripe Pro and Business checkout links retained.
-- No 67NOW references.
+The existing Stripe links remain unchanged.
+The exact owner-supplied logo remains at assets/logo.png and should not be replaced.
+Upload the contents of this folder to the GitHub repository root.
 
-Deployment:
-Upload the contents of this folder to the GitHub Pages repository root.
-Do not upload the ZIP itself.
+
+LOAD FAILSAFE:
+- The complete stylesheet is embedded into every HTML page.
+- assets/styles.css remains as a cacheable external stylesheet.
+- If the external stylesheet fails during deployment or caching, the inline stylesheet keeps the site styled instead of showing raw HTML.
