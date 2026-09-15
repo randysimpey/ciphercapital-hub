@@ -1,339 +1,324 @@
-
 /* =========================================================
-   Cipher Motion Engine
-   Vanilla JS: performant, dependency-free, reduced-motion aware.
+   CipherCapital — motion engine
+   Vanilla JS. No dependencies. Reduced-motion aware.
+   Everything degrades to a fully readable static page.
    ========================================================= */
 (() => {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  'use strict';
 
-  // Scroll progress + header depth
-  const progress = document.createElement('div');
-  progress.className = 'scroll-progress';
-  document.body.prepend(progress);
+  const root = document.documentElement;
+  const MOTION_KEY = 'cc-motion';
+  const prefersReduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const header = document.querySelector('.site-header, .site');
-  let ticking = false;
+  root.classList.add('js');
 
-  const updateScrollUI = () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const p = max > 0 ? window.scrollY / max : 0;
-    progress.style.width = `${Math.min(100, Math.max(0, p * 100))}%`;
-    if (header) header.classList.toggle('is-scrolled', window.scrollY > 24);
-    ticking = false;
+  let motionOn = localStorage.getItem(MOTION_KEY) !== 'off' && !prefersReduce;
+  const applyMotion = (on) => {
+    motionOn = on;
+    root.classList.toggle('motion-off', !on);
+    localStorage.setItem(MOTION_KEY, on ? 'on' : 'off');
   };
+  applyMotion(motionOn);
 
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(updateScrollUI);
-      ticking = true;
-    }
-  }, {passive:true});
-  updateScrollUI();
+  const raf = (fn) => requestAnimationFrame(fn);
+  const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
 
-  if (reduceMotion) return;
+  /* ---------- Scroll progress + sticky bar state ---------- */
+  const bar = document.createElement('div');
+  bar.className = 'progress';
+  document.body.prepend(bar);
 
-  // Reveal elements as they enter the viewport.
-  const revealSelectors = [
-    'section > .section-head',
-    '.card',
-    '.price-card',
-    '.report-preview',
-    '.about-grid',
-    '.faq-item',
-    '.cta',
-    '.trust-strip'
-  ];
+  const topbar = document.querySelector('.topbar');
+  let queued = false;
 
-  document.querySelectorAll(revealSelectors.join(',')).forEach((el, i) => {
-    el.classList.add(i % 4 === 0 ? 'reveal-left' : i % 4 === 1 ? 'reveal' : i % 4 === 2 ? 'reveal-right' : 'reveal-scale');
-  });
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    bar.style.width = `${clamp(max > 0 ? scrollY / max : 0, 0, 1) * 100}%`;
+    if (topbar) topbar.classList.toggle('stuck', scrollY > 20);
+    queued = false;
+  };
+  addEventListener('scroll', () => {
+    if (!queued) { raf(onScroll); queued = true; }
+  }, { passive: true });
+  onScroll();
 
-  const revealObserver = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, {threshold:0.12, rootMargin:'0px 0px -7% 0px'});
+  /* ---------- Hero entrance: one orchestrated moment ---------- */
+  const hero = document.querySelector('.hero');
+  if (hero) raf(() => raf(() => hero.classList.add('lit')));
 
-  document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el => revealObserver.observe(el));
-
-  // Stagger common card groups.
-  document.querySelectorAll('.grid, .cards, .pricing-grid').forEach(group => {
-    const children = [...group.children];
-    if (children.length >= 2 && children.length <= 8) {
-      group.classList.add('stagger');
-      revealObserver.observe(group);
-    }
-  });
-
-  // Cursor-aware light on cards.
-  document.querySelectorAll('.card,.price-card').forEach(card => {
-    card.addEventListener('pointermove', e => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', `${e.clientX - r.left}px`);
-      card.style.setProperty('--my', `${e.clientY - r.top}px`);
-    });
-  });
-
-  // Subtle 3D tilt for the dashboard only.
-  const dashboard = document.querySelector('.hero-dashboard');
-  if (dashboard && window.matchMedia('(pointer:fine)').matches) {
-    dashboard.addEventListener('pointermove', e => {
-      const r = dashboard.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - .5;
-      const y = (e.clientY - r.top) / r.height - .5;
-      dashboard.style.transform =
-        `perspective(1200px) rotateX(${(-y * 2.5).toFixed(2)}deg) rotateY(${(x * 3).toFixed(2)}deg) translateY(-4px)`;
-    });
-    dashboard.addEventListener('pointerleave', () => {
-      dashboard.style.transform = '';
-    });
+  /* ---------- Reveal on enter (headings + media only) ---------- */
+  const revealables = document.querySelectorAll('.rise');
+  if (revealables.length) {
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('seen');
+        obs.unobserve(e.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    revealables.forEach((el) => io.observe(el));
   }
 
-  // Count-up numbers when visible.
-  const countEls = document.querySelectorAll('[data-count]');
-  const countObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const target = Number(el.dataset.count);
-      const suffix = el.dataset.suffix || '';
-      const start = performance.now();
-      const duration = 1100;
-      const tick = now => {
-        const t = Math.min(1, (now - start) / duration);
-        const eased = 1 - Math.pow(1 - t, 3);
-        el.textContent = `${Math.round(target * eased)}${suffix}`;
-        if (t < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-      countObserver.unobserve(el);
-    });
-  }, {threshold:.6});
-  countEls.forEach(el => countObserver.observe(el));
+  /* ---------- Terminal typing ---------- */
+  const term = document.querySelector('[data-console]');
+  if (term) {
+    let lines = [];
+    try { lines = JSON.parse(term.dataset.console); } catch (_) { lines = []; }
 
-  // Cipher Intelligence scrollytelling, if the section exists.
-  const story = document.querySelector('.cipher-story');
-  if (story) {
-    const steps = [...story.querySelectorAll('.cipher-story__step')];
-    const core = story.querySelector('.cipher-core');
-    const setActive = index => {
-      steps.forEach((s, i) => s.classList.toggle('is-active', i === index));
-      if (core) core.style.transform = `scale(${1 + index * .045}) rotate(${index * 2}deg)`;
+    const paint = (done, partial, cls) => {
+      const html = done.map((l) => `<div class="${l.c || ''}">${l.t || '&nbsp;'}</div>`).join('');
+      term.innerHTML = partial === null
+        ? `${html}<span class="caret"></span>`
+        : `${html}<div class="${cls}">${partial}<span class="caret"></span></div>`;
     };
 
-    const storyObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const rect = story.getBoundingClientRect();
-        const progress = Math.min(0.999, Math.max(0, -rect.top / Math.max(1, rect.height - window.innerHeight)));
-        setActive(Math.min(steps.length - 1, Math.floor(progress * steps.length)));
-      });
-    }, {threshold:[0,.25,.5,.75,1]});
+    const paintAll = () => paint(lines.map((l) => ({ t: l[0], c: l[1] })), null);
 
-    storyObserver.observe(story);
-    window.addEventListener('scroll', () => {
-      const rect = story.getBoundingClientRect();
-      if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-        const p = Math.min(0.999, Math.max(0, -rect.top / Math.max(1, rect.height - window.innerHeight)));
-        setActive(Math.min(steps.length - 1, Math.floor(p * steps.length)));
-      }
-    }, {passive:true});
-  }
-})();
-
-
-/* --- Ultra UX layer --- */
-(() => {
-  const root = document.documentElement;
-
-  // Accessible motion toggle (also available with "M").
-  const motionBtn = document.createElement('button');
-  motionBtn.className = 'motion-control';
-  motionBtn.type = 'button';
-  motionBtn.innerHTML = 'Motion <span>ON</span>';
-  document.body.appendChild(motionBtn);
-
-  const setMotion = (on) => {
-    root.classList.toggle('motion-off', !on);
-    motionBtn.innerHTML = `Motion <span>${on ? 'ON' : 'OFF'}</span>`;
-    localStorage.setItem('cipher-motion', on ? 'on' : 'off');
-  };
-  setMotion(localStorage.getItem('cipher-motion') !== 'off');
-  motionBtn.addEventListener('click', () => setMotion(root.classList.contains('motion-off')));
-
-  // Back-to-top.
-  const topBtn = document.createElement('button');
-  topBtn.className='backtop';
-  topBtn.type='button';
-  topBtn.setAttribute('aria-label','Back to top');
-  topBtn.textContent='↑';
-  document.body.appendChild(topBtn);
-  const scrollCheck=()=>topBtn.classList.toggle('show',window.scrollY>700);
-  window.addEventListener('scroll',scrollCheck,{passive:true});
-  scrollCheck();
-  topBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:root.classList.contains('motion-off')?'auto':'smooth'}));
-
-  // Demo scan — clearly illustrative / client-side, never presented as a real scan.
-  const form = document.querySelector('#demoScanForm');
-  if(form){
-    const input = form.querySelector('input');
-    const button = form.querySelector('button');
-    const lines = [...document.querySelectorAll('.demo-status .scan-line')];
-    const result = document.querySelector('.demo-result');
-    form.addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const value=input.value.trim() || 'github.com/example/repository';
-      button.disabled=true;
-      button.textContent='Simulating…';
-      result?.classList.remove('show');
-      lines.forEach(l=>{l.classList.remove('done','active');});
-      let i=0;
-      const tick=()=>{
-        if(i>0){lines[i-1]?.classList.remove('active');lines[i-1]?.classList.add('done')}
-        if(i<lines.length){lines[i].classList.add('active');i++;setTimeout(tick,520)}
-        else{
-          button.disabled=false;button.textContent='Run demo';
-          if(result){
-            result.classList.add('show');
-            const repoName=value.replace(/^https?:\/\/(www\.)?github\.com\//,'').replace(/\/+$/,'');
-            const label=document.querySelector('#demoRepoLabel');
-            if(label) label.textContent=repoName;
+    if (!motionOn) {
+      paintAll();
+    } else {
+      const done = [];
+      let li = 0;
+      const nextLine = () => {
+        if (li >= lines.length) { paint(done, null); return; }
+        const [text, cls] = lines[li];
+        let ci = 0;
+        const tick = () => {
+          if (ci <= text.length) {
+            paint(done, text.slice(0, ci), cls || '');
+            ci += 1;
+            setTimeout(tick, 16);
+          } else {
+            done.push({ t: text, c: cls || '' });
+            li += 1;
+            setTimeout(nextLine, text ? 110 : 40);
           }
-        }
+        };
+        tick();
       };
-      tick();
-    });
-  }
-
-  // Finding detail modal.
-  const modal=document.querySelector('#findingModal');
-  if(modal){
-    const title=modal.querySelector('[data-modal-title]');
-    const body=modal.querySelector('[data-modal-body]');
-    const close=()=>modal.classList.remove('show');
-    modal.addEventListener('click',e=>{if(e.target===modal)close();});
-    modal.querySelector('.modal-close')?.addEventListener('click',close);
-    document.querySelectorAll('.finding-card').forEach(card=>{
-      card.addEventListener('click',()=>{
-        title.textContent=card.dataset.title || 'Finding details';
-        body.innerHTML=`
-          <p><strong>Why it matters</strong></p>
-          <p>${card.dataset.why || 'Review the evidence and confirm the finding in the affected code or configuration.'}</p>
-          <p><strong>Evidence</strong></p>
-          <div class="evidence-box">${card.dataset.evidence || 'Evidence excerpt would appear here in the real report.'}</div>
-          <div class="modal-actions">
-            <a class="btn btn-dark" href="#scan" data-close-modal>Review scan workflow</a>
-            <button class="btn btn-light" type="button" data-close-modal>Close</button>
-          </div>`;
-        modal.classList.add('show');
-        body.querySelectorAll('[data-close-modal]').forEach(el=>el.addEventListener('click',close));
-      });
-    });
-  }
-
-  // Command palette: Cmd/Ctrl+K.
-  const command = document.querySelector('#commandPalette');
-  if(command){
-    const cmdInput=command.querySelector('input');
-    const items=[...command.querySelectorAll('.command-item')];
-    const close=()=>command.classList.remove('show');
-    const open=()=>{command.classList.add('show');cmdInput.value='';setTimeout(()=>cmdInput.focus(),0)};
-    document.addEventListener('keydown',e=>{
-      if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();open();}
-      if(e.key==='Escape') close();
-      if(e.key.toLowerCase()==='m' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) setMotion(root.classList.contains('motion-off'));
-    });
-    command.addEventListener('click',e=>{if(e.target===command)close();});
-    items.forEach(item=>item.addEventListener('click',()=>{const target=item.dataset.target;close();if(target)document.querySelector(target)?.scrollIntoView({behavior:root.classList.contains('motion-off')?'auto':'smooth',block:'start'});}));
-    cmdInput.addEventListener('input',()=>{
-      const q=cmdInput.value.toLowerCase();
-      items.forEach(i=>i.style.display=i.textContent.toLowerCase().includes(q)?'flex':'none');
-    });
-  }
-
-  // Inject command palette markup.
-  const palette=document.createElement('div');
-  palette.id='commandPalette'; palette.className='command';
-  palette.innerHTML=`
-    <div class="command-box" role="dialog" aria-modal="true" aria-label="Site command palette">
-      <input class="command-input" placeholder="Jump to…  (Esc to close)" aria-label="Jump to section">
-      <div class="command-list">
-        <div class="command-item" data-target="#product"><span>SecurityAuditAI</span><span class="command-key">P</span></div>
-        <div class="command-item" data-target="#coverage"><span>Coverage</span><span class="command-key">C</span></div>
-        <div class="command-item" data-target="#scan"><span>Free scan</span><span class="command-key">S</span></div>
-        <div class="command-item" data-target="#pricing"><span>Pricing</span><span class="command-key">R</span></div>
-        <div class="command-item" data-target="#trust"><span>Trust & transparency</span><span class="command-key">T</span></div>
-        <div class="command-item" data-target="#tutorial"><span>Tutorials</span><span class="command-key">Y</span></div>
-      </div>
-    </div>`;
-  document.body.appendChild(palette);
-  const cmdInput2=palette.querySelector('input');
-  const openPalette=()=>{palette.classList.add('show');cmdInput2.value='';setTimeout(()=>cmdInput2.focus(),0)};
-  const closePalette=()=>palette.classList.remove('show');
-  document.addEventListener('keydown',e=>{
-    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette();}
-    if(e.key==='Escape') closePalette();
-  });
-  palette.addEventListener('click',e=>{if(e.target===palette)closePalette();});
-  palette.querySelectorAll('.command-item').forEach(item=>item.addEventListener('click',()=>{
-    closePalette();document.querySelector(item.dataset.target)?.scrollIntoView({behavior:root.classList.contains('motion-off')?'auto':'smooth',block:'start'});
-  }));
-  cmdInput2.addEventListener('input',()=>{const q=cmdInput2.value.toLowerCase();palette.querySelectorAll('.command-item').forEach(i=>i.style.display=i.textContent.toLowerCase().includes(q)?'flex':'none')});
-})();
-
-/* --- Final premium interaction layer --- */
-(() => {
-  const root=document.documentElement;
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduced) return;
-
-  // Pointer light follows the cursor on high-value cards.
-  document.querySelectorAll('.card,.price-card,.finding-card,.trust-card').forEach(el=>{
-    el.addEventListener('pointermove',e=>{
-      const r=el.getBoundingClientRect();
-      el.style.setProperty('--ccx',`${e.clientX-r.left}px`);
-      el.style.setProperty('--ccy',`${e.clientY-r.top}px`);
-      if(matchMedia('(pointer:fine)').matches){
-        const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
-        el.style.transform=`perspective(900px) rotateX(${(-y*1.8).toFixed(2)}deg) rotateY(${(x*2.4).toFixed(2)}deg) translateY(-6px)`;
-      }
-    },{passive:true});
-    el.addEventListener('pointerleave',()=>{el.style.transform='';});
-  });
-
-  // Hero visual parallax that reacts to scroll, but stays subtle.
-  const parallax=document.querySelector('[data-parallax]');
-  let ticking=false;
-  const update=()=>{
-    if(parallax){
-      const y=Math.min(70,Math.max(-35,window.scrollY*.055));
-      parallax.style.transform=`translate3d(0,${y}px,0)`;
+      const startIO = new IntersectionObserver((entries, obs) => {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        setTimeout(nextLine, 380);
+      }, { threshold: 0.4 });
+      startIO.observe(term);
     }
-    ticking=false;
-  };
-  addEventListener('scroll',()=>{if(!ticking){requestAnimationFrame(update);ticking=true;}},{passive:true});
+  }
 
-  // Make section headings reveal more naturally than a template-style fade.
-  const candidates=document.querySelectorAll('.sectionhead,.section-head,.finalbox,.tutorial,.trust-grid,.timeline,.findings-grid,.integration-grid');
-  const ob=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ob.unobserve(e.target)}});
-  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
-  candidates.forEach(x=>{x.classList.add('reveal');ob.observe(x)});
+  /* ---------- Report rows illuminate with scroll position ---------- */
+  const sheet = document.querySelector('[data-sheet]');
+  if (sheet) {
+    const rows = [...sheet.querySelectorAll('.row')];
+    if (!motionOn) {
+      rows.forEach((r) => r.classList.add('on'));
+    } else {
+      let sQueued = false;
+      const paintRows = () => {
+        const r = sheet.getBoundingClientRect();
+        const span = r.height + innerHeight * 0.55;
+        const p = clamp((innerHeight * 0.85 - r.top) / span, 0, 1);
+        const cut = Math.round(p * rows.length * 1.35);
+        rows.forEach((row, i) => row.classList.toggle('on', i < cut));
+        sQueued = false;
+      };
+      addEventListener('scroll', () => {
+        if (!sQueued) { raf(paintRows); sQueued = true; }
+      }, { passive: true });
+      paintRows();
+    }
+  }
 
-  // Smooth anchor navigation with sticky-header offset.
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{
-    a.addEventListener('click',e=>{
-      const id=a.getAttribute('href');
-      const target=document.querySelector(id);
-      if(!target || id==='#') return;
+  /* ---------- Count-up ---------- */
+  const counters = document.querySelectorAll('[data-count]');
+  if (counters.length) {
+    const cio = new IntersectionObserver((entries, obs) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        obs.unobserve(el);
+        const target = Number(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        if (!motionOn) { el.textContent = target + suffix; return; }
+        const t0 = performance.now();
+        const dur = 1200;
+        const step = (now) => {
+          const t = clamp((now - t0) / dur, 0, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          el.textContent = Math.round(target * eased) + suffix;
+          if (t < 1) raf(step);
+        };
+        raf(step);
+      });
+    }, { threshold: 0.6 });
+    counters.forEach((el) => cio.observe(el));
+  }
+
+  /* ---------- Pinned story ---------- */
+  const story = document.querySelector('[data-story]');
+  if (story) {
+    const steps = [...story.querySelectorAll('.story-step')];
+    const dots = [...story.querySelectorAll('.story-dots i')];
+    const graph = story.querySelector('.graph');
+    const nodes = graph ? [...graph.querySelectorAll('.node')] : [];
+    const core = graph ? graph.querySelector('.core') : null;
+
+    // Measure each edge so the draw-on animation is exact.
+    if (graph) {
+      graph.querySelectorAll('.edge').forEach((edge) => {
+        const len = Math.ceil(edge.getTotalLength ? edge.getTotalLength() : 200);
+        edge.style.setProperty('--len', len);
+      });
+    }
+
+    let active = -1;
+    const setStep = (i) => {
+      if (i === active) return;
+      active = i;
+      steps.forEach((s, n) => s.classList.toggle('live', n === i));
+      dots.forEach((d, n) => d.classList.toggle('live', n <= i));
+      if (graph) {
+        graph.classList.remove('s1', 's2', 's3');
+        graph.classList.add(`s${i + 1}`);
+        nodes.forEach((n, idx) => n.classList.toggle('hot', idx <= i * 2 + 1));
+        if (core) core.setAttribute('r', String(26 + i * 7));
+      }
+    };
+    setStep(0);
+
+    if (motionOn) {
+      let stQueued = false;
+      const paintStory = () => {
+        const r = story.getBoundingClientRect();
+        const span = Math.max(1, r.height - innerHeight);
+        const p = clamp(-r.top / span, 0, 0.999);
+        setStep(Math.min(steps.length - 1, Math.floor(p * steps.length)));
+        stQueued = false;
+      };
+      addEventListener('scroll', () => {
+        if (!stQueued) { raf(paintStory); stQueued = true; }
+      }, { passive: true });
+      paintStory();
+    }
+  }
+
+  /* ---------- Pointer light on cards ---------- */
+  if (motionOn && matchMedia('(pointer:fine)').matches) {
+    document.querySelectorAll('.card').forEach((card) => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        card.style.setProperty('--my', `${e.clientY - r.top}px`);
+      }, { passive: true });
+    });
+
+    // Console tilt — subtle, hero only.
+    const con = document.querySelector('.console');
+    if (con) {
+      con.addEventListener('pointermove', (e) => {
+        const r = con.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        con.style.transform = `perspective(1400px) rotateX(${(-y * 2.2).toFixed(2)}deg) rotateY(${(x * 2.8).toFixed(2)}deg)`;
+      }, { passive: true });
+      con.addEventListener('pointerleave', () => { con.style.transform = ''; });
+    }
+
+    // Portrait parallax.
+    const portrait = document.querySelector('[data-parallax]');
+    if (portrait) {
+      let pQueued = false;
+      const paintP = () => {
+        const r = portrait.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < innerHeight) {
+          const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
+          portrait.style.transform = `translate3d(0,${(p * -18).toFixed(1)}px,0)`;
+        }
+        pQueued = false;
+      };
+      addEventListener('scroll', () => {
+        if (!pQueued) { raf(paintP); pQueued = true; }
+      }, { passive: true });
+      paintP();
+    }
+  }
+
+  /* ---------- Anchor scrolling with sticky-bar offset ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const id = a.getAttribute('href');
+      if (!id || id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
       e.preventDefault();
-      const offset=(document.querySelector('.site')?.getBoundingClientRect().height||78)+12;
-      const y=target.getBoundingClientRect().top+window.scrollY-offset;
-      window.scrollTo({top:y,behavior:root.classList.contains('motion-off')?'auto':'smooth'});
-      history.replaceState(null,'',id);
+      const offset = (topbar ? topbar.getBoundingClientRect().height : 52) + 14;
+      scrollTo({
+        top: target.getBoundingClientRect().top + scrollY - offset,
+        behavior: motionOn ? 'smooth' : 'auto'
+      });
+      history.replaceState(null, '', id);
     });
   });
+
+  /* ---------- Motion toggle ---------- */
+  if (!prefersReduce) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'motion-toggle';
+    const label = () => { btn.innerHTML = `Motion <b>${motionOn ? 'on' : 'off'}</b>`; };
+    label();
+    document.body.appendChild(btn);
+    setTimeout(() => btn.classList.add('show'), 1600);
+    btn.addEventListener('click', () => { applyMotion(!motionOn); label(); });
+    addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'm' && !/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) {
+        applyMotion(!motionOn); label();
+      }
+    });
+  }
+
+  /* ---------- Analytics consent (Google Consent Mode v2) ---------- */
+  const consent = document.querySelector('[data-consent]');
+  if (consent) {
+    const KEY = 'cc-consent';
+    const saved = localStorage.getItem(KEY);
+    const grant = () => { if (typeof gtag === 'function') gtag('consent', 'update', { analytics_storage: 'granted' }); };
+
+    if (saved === 'granted') grant();
+    else if (saved !== 'denied') consent.hidden = false;
+
+    consent.querySelector('[data-accept]')?.addEventListener('click', () => {
+      localStorage.setItem(KEY, 'granted'); grant(); consent.hidden = true;
+    });
+    consent.querySelector('[data-decline]')?.addEventListener('click', () => {
+      localStorage.setItem(KEY, 'denied'); consent.hidden = true;
+    });
+  }
+
+  /* ---------- Checklist sign-up ---------- */
+  const form = document.querySelector('[data-signup]');
+  if (form) {
+    const note = form.parentElement.querySelector('[data-note]');
+    const button = form.querySelector('button');
+    const original = button ? button.textContent : '';
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (button) { button.disabled = true; button.textContent = form.dataset.sending || 'Sending…'; }
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' }
+        });
+        if (note) {
+          note.hidden = false;
+          note.textContent = res.ok ? (form.dataset.ok || 'Check your inbox.') : (form.dataset.fail || 'That did not go through — use the direct download below.');
+        }
+        if (res.ok) form.hidden = true;
+      } catch (_) {
+        if (note) { note.hidden = false; note.textContent = form.dataset.fail || 'That did not go through — use the direct download below.'; }
+      } finally {
+        if (button) { button.disabled = false; button.textContent = original; }
+      }
+    });
+  }
 })();

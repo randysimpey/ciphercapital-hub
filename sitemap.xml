@@ -1,1 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://randysimpey.github.io/ciphercapital-hub/</loc></url><url><loc>https://randysimpey.github.io/ciphercapital-hub/nl/</loc></url><url><loc>https://randysimpey.github.io/ciphercapital-hub/privacy.html</loc></url><url><loc>https://randysimpey.github.io/ciphercapital-hub/terms.html</loc></url></urlset>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://randysimpey.github.io/ciphercapital-hub/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://randysimpey.github.io/ciphercapital-hub/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://randysimpey.github.io/ciphercapital-hub/nl/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://randysimpey.github.io/ciphercapital-hub/nl/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://randysimpey.github.io/ciphercapital-hub/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://randysimpey.github.io/ciphercapital-hub/nl/"/>
+    <priority>1.0</priority>
+  </url>
+  <url><loc>https://randysimpey.github.io/ciphercapital-hub/privacy.html</loc><priority>0.3</priority></url>
+  <url><loc>https://randysimpey.github.io/ciphercapital-hub/terms.html</loc><priority>0.3</priority></url>
+  <url><loc>https://randysimpey.github.io/ciphercapital-hub/nl/privacy.html</loc><priority>0.3</priority></url>
+  <url><loc>https://randysimpey.github.io/ciphercapital-hub/nl/terms.html</loc><priority>0.3</priority></url>
+</urlset>

@@ -1,947 +1,545 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CipherCapital — Security intelligence that finds what matters</title><meta name="description" content="SecurityAuditAI finds exposed secrets, vulnerable dependencies and infrastructure misconfigurations — then helps you understand what matters first.">
-<meta name="theme-color" content="#0b1522"><link rel="icon" href="assets/favicon.png" type="image/svg+xml">
-<link rel="preload" as="image" href="assets/logo.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CipherCapital — find the security issues that actually matter</title>
+<meta name="description" content="SecurityAuditAI scans repositories for exposed secrets, vulnerable dependencies and infrastructure mistakes, then turns raw findings into a report you can act on.">
+<meta name="theme-color" content="#0A1622">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/favicon.png">
+<link rel="canonical" href="https://randysimpey.github.io/ciphercapital-hub/">
 <link rel="alternate" hreflang="en" href="https://randysimpey.github.io/ciphercapital-hub/">
 <link rel="alternate" hreflang="nl" href="https://randysimpey.github.io/ciphercapital-hub/nl/">
+<link rel="alternate" hreflang="x-default" href="https://randysimpey.github.io/ciphercapital-hub/">
 
-<link rel="canonical" href="https://randysimpey.github.io/ciphercapital-hub/">
-<meta property="og:type" content="website"><meta property="og:title" content="CipherCapital — Security intelligence that finds what matters"><meta property="og:description" content="SecurityAuditAI finds exposed secrets, vulnerable dependencies and infrastructure misconfigurations — then helps you understand what matters first."><meta property="og:url" content="https://randysimpey.github.io/ciphercapital-hub/"><meta property="og:image" content="assets/logo.png">
-<meta name="twitter:card" content="summary"><meta name="twitter:title" content="CipherCapital — Security intelligence that finds what matters"><meta name="twitter:description" content="SecurityAuditAI finds exposed secrets, vulnerable dependencies and infrastructure misconfigurations — then helps you understand what matters first."><meta name="twitter:image" content="assets/logo.png">
-<style id="ciphercapital-critical-css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CipherCapital — find the security issues that actually matter">
+<meta property="og:description" content="Automated repository security audits in under two minutes, plus tutorials that end with a fix.">
+<meta property="og:url" content="https://randysimpey.github.io/ciphercapital-hub/">
+<meta property="og:image" content="https://randysimpey.github.io/ciphercapital-hub/assets/logo.png">
+<meta name="twitter:card" content="summary_large_image">
 
-html,body{margin:0;padding:0;background:#f5f7fa;color:#0b1522;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
-*{box-sizing:border-box}
-img{max-width:100%;display:block}
-a{color:inherit;text-decoration:none}
-.wrap{width:min(1240px,calc(100% - 48px));margin:auto}
-.site{position:sticky;top:0;z-index:100;background:rgba(245,247,250,.96);border-bottom:1px solid #dce3ea}
-.nav{height:78px;display:flex;align-items:center;gap:24px}
-.brand{display:flex;align-items:center;gap:12px;font-weight:760;letter-spacing:-.03em}
-.brand img{width:46px;height:46px;border-radius:12px;object-fit:cover}
-.hero{min-height:calc(100vh - 112px);padding:86px 0 105px}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(35px,7vw,110px);align-items:center}
-.hero h1{font-size:clamp(52px,7.3vw,104px);line-height:.94;letter-spacing:-.073em;margin:20px 0 28px}
-.section{padding:140px 0}
-.three,.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card,.price{background:#fff;border:1px solid #dce3ea;border-radius:24px}
-@media(max-width:980px){.hero-grid,.three,.pricing{grid-template-columns:1fr}.navlinks{display:none}}
-
-
-:root{
- --bg:#f4f6f8;--surface:#ffffff;--surface2:#e8edf2;--ink:#101a27;--muted:#647180;
- --line:#d7dee6;--dark:#0b1522;--dark2:#122033;--darkmuted:#93a4b7;
- --amber:#d9a24a;--amber2:#f0c36d;--green:#4f9b78;--red:#b94d52;
- --sans:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
- --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
- --max:1180px;--r:12px;
-}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65}
-a{color:inherit}.wrap{max-width:var(--max);margin:auto;padding:0 28px}
-img{max-width:100%;display:block}.mono{font-family:var(--mono)}
-:focus-visible{outline:2px solid var(--amber);outline-offset:4px}
-.topbar{background:var(--dark);color:#dfe7e2;text-align:center;font:12px var(--mono);padding:8px 16px;letter-spacing:.02em}
-.site{position:sticky;top:0;z-index:20;background:rgba(244,246,248,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}
-.brand{display:flex;align-items:center;text-decoration:none;font:600 15px var(--mono)}
-.brand img{width:46px;height:46px;border-radius:12px;object-fit:cover;box-shadow:0 8px 20px rgba(11,21,34,.10);transition:transform .45s var(--ease)}
-.navlinks{display:flex;gap:25px;font-size:14px;color:var(--muted)}
-.navlinks a{text-decoration:none}.navlinks a:hover{color:var(--ink)}
-.actions{display:flex;align-items:center;gap:10px}
-.lang{font:12px var(--mono);color:var(--muted);text-decoration:none;padding:6px 7px;border:1px solid transparent}
-.lang.active{border-color:var(--line);color:var(--ink);border-radius:6px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--ink);padding:12px 17px;border-radius:8px;text-decoration:none;font:600 13px var(--mono);transition:.18s ease}
-.btn:hover{transform:translateY(-1px)}.btn-dark{background:var(--ink);color:#fff}.btn-light{background:transparent}.btn-amber{background:var(--amber);border-color:var(--amber);color:#17130d}
-.hero{padding:88px 0 76px;border-bottom:1px solid var(--line)}
-.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:70px;align-items:center}
-.eyebrow{font:600 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:#69736e}
-h1,h2,h3{font-family:var(--mono);line-height:1.12;letter-spacing:-.035em;margin:0}
-h1{font-size:clamp(42px,6vw,74px);max-width:10ch;margin-top:16px}
-h2{font-size:clamp(30px,4vw,48px);max-width:16ch}
-h3{font-size:18px}
-.lead{font-size:20px;color:var(--muted);max-width:650px;margin:24px 0 0}
-.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
-.micro{font:12px var(--mono);color:var(--muted);margin-top:15px}
-.panel{background:var(--dark);color:#edf3ef;border:1px solid #26342d;border-radius:14px;box-shadow:0 28px 70px rgba(16,22,19,.15);overflow:hidden}
-.panelbar{display:flex;align-items:center;gap:7px;padding:12px 15px;border-bottom:1px solid #26342d;background:#0c120f}
-.dot{width:8px;height:8px;border-radius:50%;background:#45534b}.paneltitle{margin-left:7px;color:#87978e;font:11px var(--mono)}
-.terminal{padding:25px;font:13px/1.9 var(--mono);min-height:370px}
-.ok{color:#72c394}.warn{color:#e4ae61}.dim{color:#91a29a}.white{color:#edf3ef}.accent{color:#f2b45b}
-.score{display:flex;align-items:flex-end;gap:18px;padding-bottom:20px;margin-bottom:18px;border-bottom:1px solid #26342d}
-.score strong{font:600 54px/1 var(--mono);color:#f2b45b}.score small{color:#9eaea5}
-.section{padding:86px 0;border-bottom:1px solid var(--line)}
-.sectionhead{display:flex;justify-content:space-between;gap:40px;align-items:end;margin-bottom:38px}
-.sectionhead p{max-width:510px;color:var(--muted);margin:0}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px}
-.card .num{font:12px var(--mono);color:var(--amber);display:block;margin-bottom:35px}
-.card p{color:var(--muted);font-size:15px}
-.darksection{background:var(--dark);color:#eef3ef;border-bottom:0}
-.darksection .sectionhead p,.darksection .muted{color:#a9b5ae}
-.intelligence{display:grid;grid-template-columns:.9fr 1.1fr;gap:45px;align-items:center}
-.callout{border:1px solid #33443b;border-radius:12px;padding:26px;background:#141c18}
-.riskrow{display:grid;grid-template-columns:105px 1fr 95px;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid #2b3831;font:12px var(--mono)}
-.riskrow:last-child{border:0}.pill{display:inline-flex;border:1px solid #46564d;border-radius:999px;padding:4px 8px;width:max-content}.pill.hot{color:#f2b45b;border-color:#7b5b2c}
-.steps{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.step{padding:28px;border-right:1px solid var(--line)}.step:last-child{border:0}
-.stepno{font:12px var(--mono);color:var(--amber)}.step p{color:var(--muted);font-size:14px}
-.coverage{border-top:1px solid var(--line)}
-.coverage-row{display:grid;grid-template-columns:250px 1fr 100px;gap:24px;padding:25px 0;border-bottom:1px solid var(--line);align-items:start}
-.coverage-row p{margin:0;color:var(--muted);font-size:15px}.status{font:11px var(--mono);text-align:right;color:#59645f}
-.report{display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:start}
-.code{background:var(--dark);border-radius:12px;overflow:hidden;font:12px/1.8 var(--mono);color:#e9efeb}
-.codehead{padding:12px 16px;border-bottom:1px solid #28352e;color:#8fa097;display:flex;justify-content:space-between}
-.coderow{display:grid;grid-template-columns:42px 1fr;padding:4px 17px}.ln{color:#46554c;text-align:right;padding-right:13px}.finding{color:#e4ae61}
-.pricing{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
-.price{display:grid;grid-template-columns:1fr .7fr 1.7fr auto;gap:20px;padding:24px;border-bottom:1px solid var(--line);align-items:center}.price:last-child{border:0}
-.price .name{font:600 17px var(--mono)}.price .amount{font:600 18px var(--mono)}.price ul{margin:0;padding:0;list-style:none;color:var(--muted);font-size:14px}.price li+li{margin-top:5px}.featured{background:#f0ede4}
-.about{display:grid;grid-template-columns:190px 1fr;gap:45px;align-items:start}
-.portrait{width:190px;aspect-ratio:1;border-radius:14px;overflow:hidden;background:#ddd9cf;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font:600 34px var(--mono)}.portrait img{width:100%;height:100%;object-fit:contain;object-position:center center}
-.portrait span{color:#756e62}
-.faq{max-width:850px}.faq details{border-top:1px solid var(--line);padding:19px 0}.faq details:last-child{border-bottom:1px solid var(--line)}
-.faq summary{cursor:pointer;font:500 14px var(--mono);display:flex;justify-content:space-between}.faq summary::after{content:"+"}.faq details[open] summary::after{content:"−"}.faq p{color:var(--muted);max-width:700px}
-.final{padding:95px 0}.finalbox{background:var(--dark);color:#fff;border-radius:16px;padding:55px;display:flex;justify-content:space-between;align-items:end;gap:30px}.finalbox p{color:#aab7b0;max-width:600px}
-footer{padding:35px 0 55px}.footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.footerlinks{display:flex;gap:17px;flex-wrap:wrap;color:var(--muted);font-size:13px}.footerlinks a{text-decoration:none}.legal{color:var(--muted);font:11px var(--mono);margin-top:20px}
-.prose{max-width:850px;padding:70px 0}.prose h1{font-size:48px;max-width:100%}.prose h2{font-size:28px;max-width:100%;margin-top:45px}.prose p,.prose li{color:var(--muted)}.prose a{color:#77501f}
-@media(max-width:900px){.navlinks{display:none}.hero-grid,.intelligence,.report,.about{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.steps{grid-template-columns:1fr 1fr}.step:nth-child(2){border-right:0}.step:nth-child(-n+2){border-bottom:1px solid var(--line)}.coverage-row{grid-template-columns:1fr}.status{text-align:left}.price{grid-template-columns:1fr}.finalbox{display:block}.finalbox .btn{margin-top:20px}}
-@media(max-width:600px){.wrap{padding:0 18px}.hero{padding:58px 0}.section{padding:62px 0}.actions .btn{display:none}h1{font-size:43px}.steps{grid-template-columns:1fr}.step{border-right:0!important;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}.finalbox{padding:32px}.portrait{width:150px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
-
-
-/* =========================================================
-   CIPHER MOTION SYSTEM — Apple-inspired, brand-specific
-   Scroll choreography, depth, micro-interactions.
-   ========================================================= */
-
-html { scroll-behavior: smooth; }
-body { overflow-x: clip; }
-
-:root{
-  --motion-ease:cubic-bezier(.22,1,.36,1);
-  --motion-soft:cubic-bezier(.16,1,.3,1);
-}
-
-/* Page-load choreography */
-@keyframes cc-page-in{
-  from{opacity:0; transform:translateY(10px)}
-  to{opacity:1; transform:none}
-}
-body{animation:cc-page-in .75s var(--motion-ease) both}
-
-/* Header gets a subtle glass/depth treatment while scrolling */
-.site-header{
-  transition:background .45s ease, box-shadow .45s ease, border-color .45s ease, transform .45s var(--motion-ease);
-}
-.site-header.is-scrolled{
-  background:rgba(244,246,248,.88);
-  box-shadow:0 10px 40px rgba(16,26,39,.08);
-  backdrop-filter:blur(18px) saturate(130%);
-  -webkit-backdrop-filter:blur(18px) saturate(130%);
-}
-
-/* Hero: cinematic stagger */
-.hero .eyebrow,
-.hero h1,
-.hero .lead,
-.hero .actions,
-.hero .hero-meta,
-.hero .hero-dashboard{
-  opacity:0;
-  transform:translateY(28px);
-  animation:cc-hero-in 1s var(--motion-ease) forwards;
-}
-.hero .eyebrow{animation-delay:.08s}
-.hero h1{animation-delay:.16s}
-.hero .lead{animation-delay:.25s}
-.hero .actions{animation-delay:.34s}
-.hero .hero-meta{animation-delay:.43s}
-.hero .hero-dashboard{animation-delay:.50s}
-
-@keyframes cc-hero-in{
-  to{opacity:1; transform:none}
-}
-
-/* Soft ambient hero light */
-.hero::before{
-  content:"";
-  position:absolute;
-  width:55vw;
-  height:55vw;
-  max-width:780px;
-  max-height:780px;
-  right:-18vw;
-  top:-22vw;
-  border-radius:50%;
-  background:radial-gradient(circle, rgba(79,155,120,.11), rgba(79,155,120,0) 65%);
-  pointer-events:none;
-  animation:cc-breathe 8s ease-in-out infinite;
-}
-@keyframes cc-breathe{
-  0%,100%{transform:scale(1);opacity:.65}
-  50%{transform:scale(1.08);opacity:1}
-}
-
-/* Scroll-reveal utility */
-.reveal,
-.reveal-left,
-.reveal-right,
-.reveal-scale{
-  opacity:0;
-  transition:
-    opacity .9s var(--motion-ease),
-    transform 1s var(--motion-ease);
-  will-change:transform,opacity;
-}
-.reveal{transform:translateY(42px)}
-.reveal-left{transform:translateX(-54px)}
-.reveal-right{transform:translateX(54px)}
-.reveal-scale{transform:scale(.92)}
-.reveal.is-visible,
-.reveal-left.is-visible,
-.reveal-right.is-visible,
-.reveal-scale.is-visible{
-  opacity:1;
-  transform:none;
-}
-
-/* Stagger children inside revealed groups */
-.stagger > *{
-  opacity:0;
-  transform:translateY(24px);
-  transition:opacity .8s var(--motion-ease), transform .8s var(--motion-ease);
-}
-.stagger.is-visible > *{opacity:1;transform:none}
-.stagger.is-visible > *:nth-child(1){transition-delay:.04s}
-.stagger.is-visible > *:nth-child(2){transition-delay:.11s}
-.stagger.is-visible > *:nth-child(3){transition-delay:.18s}
-.stagger.is-visible > *:nth-child(4){transition-delay:.25s}
-.stagger.is-visible > *:nth-child(5){transition-delay:.32s}
-.stagger.is-visible > *:nth-child(6){transition-delay:.39s}
-
-/* Dashboard depth */
-.hero-dashboard,
-.report-preview,
-.score-card,
-.card,
-.price-card{
-  transform-style:preserve-3d;
-}
-.hero-dashboard{
-  transition:transform .7s var(--motion-ease), box-shadow .7s ease;
-  box-shadow:0 30px 80px rgba(11,21,34,.14);
-}
-.hero-dashboard:hover{
-  transform:translateY(-6px) rotateX(1deg) rotateY(-1deg);
-  box-shadow:0 40px 100px rgba(11,21,34,.18);
-}
-
-/* Scan-line detail inside dashboard */
-.hero-dashboard::after{
-  content:"";
-  position:absolute;
-  left:0;right:0;
-  top:-10%;
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(79,155,120,.65),transparent);
-  box-shadow:0 0 18px rgba(79,155,120,.35);
-  animation:cc-scanline 4.8s linear infinite;
-  pointer-events:none;
-}
-@keyframes cc-scanline{
-  from{top:-5%;opacity:0}
-  8%{opacity:1}
-  88%{opacity:1}
-  to{top:105%;opacity:0}
-}
-
-/* Interactive cards */
-.card,
-.price-card,
-.report-preview{
-  transition:
-    transform .55s var(--motion-ease),
-    box-shadow .55s var(--motion-ease),
-    border-color .35s ease;
-}
-.card:hover,
-.price-card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 22px 55px rgba(16,26,39,.11);
-}
-.card::before,
-.price-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:radial-gradient(240px circle at var(--mx,50%) var(--my,0%), rgba(79,155,120,.08), transparent 60%);
-  opacity:0;
-  transition:opacity .35s ease;
-  pointer-events:none;
-}
-.card:hover::before,
-.price-card:hover::before{opacity:1}
-
-/* Buttons: restrained lift + shine */
-.btn{
-  position:relative;
-  overflow:hidden;
-  transition:transform .35s var(--motion-ease), box-shadow .35s ease, background .35s ease;
-}
-.btn:hover{transform:translateY(-2px)}
-.btn::after{
-  content:"";
-  position:absolute;
-  top:-120%;
-  left:-30%;
-  width:22%;
-  height:340%;
-  transform:rotate(20deg);
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);
-  transition:left .75s var(--motion-ease);
-  pointer-events:none;
-}
-.btn:hover::after{left:125%}
-
-/* Logo micro motion */
-.brand img{
-  transition:transform .55s var(--motion-ease), filter .35s ease;
-}
-.brand:hover img{
-  transform:translateY(-2px) rotate(-2deg);
-  filter:drop-shadow(0 8px 16px rgba(16,26,39,.16));
-}
-
-/* Section divider drift */
-.section-head .eyebrow{
-  transition:letter-spacing .6s var(--motion-ease);
-}
-.section-head:hover .eyebrow{letter-spacing:.16em}
-
-/* Animated progress line */
-.scroll-progress{
-  position:fixed;
-  z-index:9999;
-  top:0;left:0;
-  height:2px;
-  width:0;
-  background:linear-gradient(90deg,#4f9b78,#d9a24a);
-  box-shadow:0 0 12px rgba(79,155,120,.35);
-  pointer-events:none;
-}
-
-/* Sticky storytelling section */
-.cipher-story{
-  position:relative;
-  min-height:220vh;
-  margin-top:5rem;
-}
-.cipher-story__sticky{
-  position:sticky;
-  top:0;
-  min-height:100vh;
-  display:grid;
-  place-items:center;
-  overflow:hidden;
-  padding:8rem 0;
-}
-.cipher-story__stage{
-  width:min(1180px,92vw);
-  display:grid;
-  grid-template-columns:1fr 1.15fr;
-  gap:clamp(2rem,6vw,6rem);
-  align-items:center;
-}
-.cipher-story__copy{
-  position:relative;
-  z-index:2;
-}
-.cipher-story__step{
-  opacity:.28;
-  transform:translateY(18px);
-  transition:opacity .5s var(--motion-ease), transform .5s var(--motion-ease);
-}
-.cipher-story__step.is-active{
-  opacity:1;
-  transform:none;
-}
-.cipher-story__visual{
-  position:relative;
-  aspect-ratio:1;
-  max-width:560px;
-  justify-self:end;
-}
-.cipher-orbit{
-  position:absolute;
-  inset:8%;
-  border:1px solid rgba(79,155,120,.20);
-  border-radius:50%;
-  animation:cc-orbit 18s linear infinite;
-}
-.cipher-orbit:nth-child(2){inset:18%;animation-duration:12s;animation-direction:reverse}
-.cipher-orbit:nth-child(3){inset:31%;animation-duration:8s}
-@keyframes cc-orbit{to{transform:rotate(360deg)}}
-.cipher-core{
-  position:absolute;
-  inset:38%;
-  border-radius:24%;
-  background:linear-gradient(145deg,#0b1522,#20334b);
-  box-shadow:0 30px 80px rgba(11,21,34,.25), inset 0 0 40px rgba(79,155,120,.12);
-  display:grid;
-  place-items:center;
-  color:#fff;
-  font:700 clamp(1rem,2vw,1.5rem)/1 "IBM Plex Mono",monospace;
-  letter-spacing:.08em;
-  transform:scale(1);
-  transition:transform .7s var(--motion-ease);
-}
-.cipher-node{
-  position:absolute;
-  width:12px;height:12px;
-  border-radius:50%;
-  background:#4f9b78;
-  box-shadow:0 0 0 7px rgba(79,155,120,.10),0 0 22px rgba(79,155,120,.5);
-  transform:translate(-50%,-50%);
-  transition:opacity .4s ease,transform .7s var(--motion-ease);
-}
-.cipher-node:nth-of-type(1){left:18%;top:31%}
-.cipher-node:nth-of-type(2){left:82%;top:24%}
-.cipher-node:nth-of-type(3){left:72%;top:76%}
-.cipher-node:nth-of-type(4){left:24%;top:70%}
-
-/* Animated metric counters */
-.metric-number{
-  font-variant-numeric:tabular-nums;
-}
-
-/* Page navigation transition where supported */
-@view-transition{navigation:auto}
-::view-transition-old(root){animation:cc-vt-out .22s ease both}
-::view-transition-new(root){animation:cc-vt-in .42s var(--motion-ease) both}
-@keyframes cc-vt-out{to{opacity:0}}
-@keyframes cc-vt-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-/* Respect accessibility preferences */
-@media (prefers-reduced-motion: reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{
-    animation-duration:.01ms !important;
-    animation-iteration-count:1 !important;
-    transition-duration:.01ms !important;
-    scroll-behavior:auto !important;
-  }
-  .reveal,.reveal-left,.reveal-right,.reveal-scale,
-  .stagger > *{
-    opacity:1 !important;
-    transform:none !important;
-  }
-}
-
-@media (max-width: 820px){
-  .cipher-story{min-height:auto}
-  .cipher-story__sticky{
-    position:relative;
-    min-height:auto;
-    padding:5rem 0;
-  }
-  .cipher-story__stage{grid-template-columns:1fr}
-  .cipher-story__visual{justify-self:center;width:min(88vw,480px)}
-  .cipher-story__step{opacity:1;transform:none;margin-bottom:2.5rem}
-}
-
-/* =========================================================
-   CIPHER ULTRA UX — useful interactive product storytelling
-   ========================================================= */
-
-:root{
-  --blue:#315b8a;
-  --blue-soft:#eaf1f8;
-  --shadow-lg:0 34px 90px rgba(11,21,34,.14);
-}
-
-/* More deliberate spacing around interactive modules */
-.ux-section{position:relative;overflow:hidden}
-.ux-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,6rem);align-items:center}
-.ux-grid.reverse{grid-template-columns:.95fr 1.05fr}
-@media(max-width:900px){.ux-grid,.ux-grid.reverse{grid-template-columns:1fr}}
-
-.demo-shell{
-  border:1px solid var(--line);
-  border-radius:22px;
-  background:rgba(255,255,255,.82);
-  box-shadow:var(--shadow-lg);
-  overflow:hidden;
-}
-.demo-top{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:1rem;padding:14px 18px;border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,#fff,#f6f8fa);
-}
-.demo-dots{display:flex;gap:6px}.demo-dots i{display:block;width:8px;height:8px;border-radius:50%;background:#b9c2cc}
-.demo-label{font:600 12px/1 "IBM Plex Mono",monospace;color:var(--muted);letter-spacing:.04em}
-.demo-body{padding:20px}
-.demo-input{
-  display:flex;gap:10px;align-items:center;
-  border:1px solid var(--line);border-radius:13px;background:#fbfcfd;
-  padding:9px;
-  box-shadow:inset 0 1px 0 rgba(0,0,0,.02);
-}
-.demo-input input{
-  width:100%;border:0;outline:0;background:transparent;
-  font:500 14px/1.4 "IBM Plex Mono",monospace;color:var(--ink);
-  padding:8px;
-}
-.demo-input button{white-space:nowrap}
-.demo-status{margin-top:18px;min-height:178px}
-.scan-line{display:flex;align-items:center;gap:10px;padding:9px 0;font:500 13px/1.4 "IBM Plex Mono",monospace;color:var(--muted);border-bottom:1px solid #edf0f3}
-.scan-line:last-child{border-bottom:0}
-.scan-state{width:9px;height:9px;border-radius:50%;background:#cbd3dc;box-shadow:0 0 0 5px rgba(203,211,220,.16)}
-.scan-line.done{color:var(--ink)}.scan-line.done .scan-state{background:var(--green);box-shadow:0 0 0 5px rgba(79,155,120,.12)}
-.scan-line.active .scan-state{background:var(--amber);animation:cc-pulse .9s ease-in-out infinite}
-@keyframes cc-pulse{50%{box-shadow:0 0 0 8px rgba(217,162,74,.06)}}
-.demo-result{
-  display:none;margin-top:18px;border-top:1px solid var(--line);padding-top:18px;
-}
-.demo-result.show{display:block;animation:cc-hero-in .65s var(--motion-ease) both}
-.result-score{display:flex;align-items:flex-end;gap:10px}.result-score strong{font-size:56px;letter-spacing:-.05em}
-.result-score span{font:600 12px/1.2 "IBM Plex Mono",monospace;color:var(--muted);padding-bottom:10px}
-.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
-@media(max-width:560px){.result-grid{grid-template-columns:1fr}}
-.result-chip{padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff}
-.result-chip b{display:block;font:700 18px/1 "IBM Plex Mono",monospace}.result-chip small{display:block;margin-top:5px;color:var(--muted)}
-
-.architecture{
-  position:relative;display:grid;grid-template-columns:repeat(5,1fr);
-  gap:12px;align-items:stretch;margin-top:26px
-}
-.arch-node{
-  position:relative;min-height:138px;border:1px solid rgba(255,255,255,.14);
-  border-radius:16px;padding:16px;background:linear-gradient(160deg,#112033,#0c1725);
-  color:#fff;box-shadow:0 16px 45px rgba(0,0,0,.18);
-}
-.arch-node .num{font:700 11px/1 "IBM Plex Mono",monospace;color:#9cb3c8}
-.arch-node h3{font-size:16px;margin:18px 0 8px}.arch-node p{font-size:12px;line-height:1.5;color:#b9c7d4}
-.arch-node.active{border-color:rgba(79,155,120,.55);box-shadow:0 0 0 1px rgba(79,155,120,.12),0 24px 60px rgba(79,155,120,.08)}
-.arch-arrow{position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:#7890a7;font-size:18px;z-index:2}
-@media(max-width:900px){.architecture{grid-template-columns:1fr 1fr}.arch-arrow{display:none}}
-@media(max-width:520px){.architecture{grid-template-columns:1fr}}
-
-.integration-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:28px}
-.integration{
-  border:1px solid var(--line);border-radius:14px;padding:17px 12px;background:#fff;
-  text-align:center;transition:transform .45s var(--motion-ease),box-shadow .45s var(--motion-ease),border-color .3s ease;
-}
-.integration:hover{transform:translateY(-6px);box-shadow:0 18px 45px rgba(16,26,39,.09);border-color:#bdc9d4}
-.integration .logolet{font:700 13px/1 "IBM Plex Mono",monospace;letter-spacing:.04em}
-.integration small{display:block;margin-top:8px;color:var(--muted);font-size:11px}
-@media(max-width:900px){.integration-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:520px){.integration-grid{grid-template-columns:repeat(2,1fr)}}
-
-.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
-.trust-card{padding:22px;border:1px solid var(--line);border-radius:18px;background:#fff}
-.trust-card h3{font-size:17px}.trust-card p{color:var(--muted);font-size:14px;line-height:1.65}
-.trust-icon{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:var(--blue-soft);color:var(--blue);font:700 14px/1 "IBM Plex Mono",monospace;margin-bottom:16px}
-@media(max-width:800px){.trust-grid{grid-template-columns:1fr}}
-
-.timeline{position:relative;margin-top:35px;padding-left:28px}
-.timeline::before{content:"";position:absolute;left:8px;top:0;bottom:0;width:1px;background:linear-gradient(#d7dee6,rgba(215,222,230,0))}
-.timeline-item{position:relative;padding:0 0 30px}
-.timeline-item::before{content:"";position:absolute;left:-24px;top:4px;width:9px;height:9px;background:var(--green);border-radius:50%;box-shadow:0 0 0 6px rgba(79,155,120,.10)}
-.timeline-item h3{margin:0 0 7px;font-size:16px}.timeline-item p{margin:0;color:var(--muted);font-size:14px;max-width:650px}
-
-.finding-card{
-  border:1px solid var(--line);border-radius:18px;background:#fff;padding:18px;
-  cursor:pointer;transition:transform .4s var(--motion-ease),box-shadow .4s ease,border-color .3s ease;
-}
-.finding-card:hover{transform:translateY(-5px);box-shadow:0 20px 55px rgba(16,26,39,.09);border-color:#bac7d3}
-.finding-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.finding-tag{font:700 10px/1 "IBM Plex Mono",monospace;letter-spacing:.06em;color:var(--muted)}
-.finding-card h3{font-size:17px;margin:13px 0 8px}.finding-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
-.findings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}@media(max-width:850px){.findings-grid{grid-template-columns:1fr}}
-
-.modal{
-  position:fixed;inset:0;z-index:10000;display:none;place-items:center;padding:20px;
-  background:rgba(6,13,22,.55);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
-}
-.modal.show{display:grid}
-.modal-card{width:min(680px,100%);max-height:86vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 45px 120px rgba(0,0,0,.26);animation:cc-hero-in .5s var(--motion-ease)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:18px 20px;border-bottom:1px solid var(--line)}
-.modal-close{border:1px solid var(--line);background:#f7f9fb;border-radius:10px;width:36px;height:36px;cursor:pointer}
-.modal-content{padding:24px}.evidence-box{padding:15px;border-radius:12px;background:#0b1522;color:#dce7f0;font:500 12px/1.7 "IBM Plex Mono",monospace;white-space:pre-wrap}
-.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-
-.command{
-  position:fixed;inset:0;z-index:10001;display:none;align-items:flex-start;justify-content:center;padding:12vh 20px 20px;
-  background:rgba(6,13,22,.38);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
-}
-.command.show{display:flex}
-.command-box{width:min(620px,100%);background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 40px 100px rgba(0,0,0,.2);overflow:hidden}
-.command-input{width:100%;border:0;outline:0;padding:18px 20px;font:500 15px/1.4 "IBM Plex Mono",monospace;border-bottom:1px solid var(--line)}
-.command-list{padding:8px}.command-item{display:flex;justify-content:space-between;gap:10px;padding:12px 13px;border-radius:10px;cursor:pointer}.command-item:hover,.command-item.active{background:#f2f5f7}.command-key{font:600 11px/1 "IBM Plex Mono",monospace;color:var(--muted)}
-
-.motion-control{
-  position:fixed;right:18px;bottom:18px;z-index:9998;
-  border:1px solid rgba(255,255,255,.18);background:rgba(11,21,34,.9);color:#fff;
-  border-radius:999px;padding:8px 12px;font:600 11px/1 "IBM Plex Mono",monospace;cursor:pointer;
-  box-shadow:0 12px 35px rgba(11,21,34,.22)
-}
-.motion-control span{opacity:.7}
-
-.backtop{
-  position:fixed;right:18px;bottom:64px;z-index:9997;width:42px;height:42px;border:1px solid var(--line);
-  border-radius:50%;background:rgba(255,255,255,.9);color:var(--ink);display:grid;place-items:center;
-  cursor:pointer;opacity:0;transform:translateY(10px);pointer-events:none;transition:.35s var(--motion-ease);
-  box-shadow:0 12px 35px rgba(16,26,39,.11)
-}
-.backtop.show{opacity:1;transform:none;pointer-events:auto}
-
-@media(prefers-reduced-motion:reduce){
-  .motion-control{display:none}
-}
-
-html.motion-off *,html.motion-off *::before,html.motion-off *::after{
-  animation:none !important;transition:none !important;scroll-behavior:auto !important;
-}
-html.motion-off .reveal,html.motion-off .reveal-left,html.motion-off .reveal-right,html.motion-off .reveal-scale,
-html.motion-off .stagger > *{opacity:1 !important;transform:none !important}
-
-.site.is-scrolled{
-  background:rgba(244,246,248,.88);
-  box-shadow:0 10px 40px rgba(16,26,39,.08);
-  backdrop-filter:blur(18px) saturate(130%);
-  -webkit-backdrop-filter:blur(18px) saturate(130%);
-}
-
-/* =========================================================
-   FINAL MOTION / PRODUCT POLISH
-   ========================================================= */
-:root{--cc-ease:cubic-bezier(.22,1,.36,1);--cc-soft:cubic-bezier(.16,1,.3,1)}
-body{overflow-x:clip}
-.site{transition:background .5s var(--cc-ease),box-shadow .5s var(--cc-ease),transform .5s var(--cc-ease)}
-.brand img{background:#0b1522;object-fit:cover;border-radius:12px;transition:transform .55s var(--cc-ease),box-shadow .55s var(--cc-ease)}
-.brand:hover img{transform:translateY(-2px) rotate(-1.5deg) scale(1.015);box-shadow:0 13px 30px rgba(11,21,34,.16)}
-
-/* Hero choreography */
-.hero .eyebrow,.hero h1,.hero .lead,.hero .ctas,.hero .micro,.hero .hero-visual{opacity:0;transform:translateY(28px);animation:ccIn 1s var(--cc-ease) forwards}
-.hero .eyebrow{animation-delay:.05s}.hero h1{animation-delay:.12s}.hero .lead{animation-delay:.22s}.hero .ctas{animation-delay:.31s}.hero .micro{animation-delay:.38s}.hero .hero-visual{animation-delay:.16s}
-@keyframes ccIn{to{opacity:1;transform:none}}
-
-/* Scroll reveals */
-.reveal,.reveal-left,.reveal-right,.reveal-scale{opacity:0;will-change:transform,opacity;transition:opacity .9s var(--cc-ease),transform 1s var(--cc-ease)}
-.reveal{transform:translateY(42px)}.reveal-left{transform:translateX(-48px)}.reveal-right{transform:translateX(48px)}.reveal-scale{transform:scale(.92)}
-.reveal.in,.reveal-left.in,.reveal-right.in,.reveal-scale.in,.is-visible{opacity:1!important;transform:none!important}
-.stagger > *{opacity:0;transform:translateY(24px);transition:opacity .75s var(--cc-ease),transform .85s var(--cc-ease)}
-.stagger.is-visible > *,.stagger.in > *{opacity:1;transform:none}.stagger > *:nth-child(1){transition-delay:.04s}.stagger > *:nth-child(2){transition-delay:.11s}.stagger > *:nth-child(3){transition-delay:.18s}.stagger > *:nth-child(4){transition-delay:.25s}.stagger > *:nth-child(5){transition-delay:.32s}
-
-/* Apple-like ambient light + cursor light */
-.hero:after,.section.dark:after{content:"";position:absolute;pointer-events:none;width:42vw;height:42vw;max-width:720px;max-height:720px;border-radius:50%;background:radial-gradient(circle,rgba(98,194,155,.10),transparent 68%);filter:blur(8px);opacity:.75;animation:ccPulse 9s ease-in-out infinite}
-.hero:after{right:-14vw;top:4vw}.section.dark:after{left:-18vw;bottom:-18vw;background:radial-gradient(circle,rgba(98,194,155,.07),transparent 68%)}
-@keyframes ccPulse{50%{transform:scale(1.08);opacity:1}}
-.card,.price-card,.integration,.finding-card,.trust-card,.about-grid,.report-preview{transform-style:preserve-3d}
-.card:hover,.price-card:hover,.integration:hover,.finding-card:hover,.trust-card:hover{box-shadow:0 28px 72px rgba(11,21,34,.12)}
-.card:before,.price-card:before,.finding-card:before,.trust-card:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(220px circle at var(--ccx,50%) var(--ccy,0%),rgba(98,194,155,.10),transparent 62%);opacity:0;transition:opacity .35s ease}.card:hover:before,.price-card:hover:before,.finding-card:hover:before,.trust-card:hover:before{opacity:1}
-
-/* Hero dashboard / report depth */
-.hero-dashboard,.report-preview,.report-window{transition:transform .7s var(--cc-ease),box-shadow .7s var(--cc-ease)}
-.hero-dashboard:hover,.report-preview:hover,.report-window:hover{box-shadow:0 45px 120px rgba(11,21,34,.18)}
-
-/* Scanline and progress */
-.scroll-progress{position:fixed!important;left:0;top:0;width:0;height:2px;background:linear-gradient(90deg,#62c29b,#e9b45d);box-shadow:0 0 16px rgba(98,194,155,.4);z-index:10002}
-
-/* Sticky story polish */
-.cipher-story__sticky{backdrop-filter:saturate(110%)}
-.cipher-story__step{transition:opacity .7s var(--cc-ease),transform .7s var(--cc-ease),filter .7s ease}
-.cipher-story__step:not(.is-active){filter:blur(.2px)}
-.cipher-core{box-shadow:0 35px 100px rgba(11,21,34,.30),inset 0 0 30px rgba(98,194,155,.13);transition:transform .8s var(--cc-ease),box-shadow .8s var(--cc-ease)}
-.cipher-orbit{box-shadow:0 0 30px rgba(98,194,155,.04)}
-
-/* Button micro-interaction */
-.btn{position:relative;overflow:hidden}.btn:after{content:"";position:absolute;top:-140%;left:-25%;width:20%;height:380%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.27),transparent);transform:rotate(18deg);transition:left .8s var(--cc-ease);pointer-events:none}.btn:hover:after{left:125%}
-
-/* Timeline / coverage visual lift */
-.timeline-item{transition:transform .55s var(--cc-ease)}.timeline-item:hover{transform:translateX(7px)}
-
-/* Better mobile motion */
-@media(max-width:800px){
-  .hero .hero-visual{animation-delay:.25s}
-  .hero{min-height:auto}
-  .cipher-story{min-height:190vh}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
-  .hero .eyebrow,.hero h1,.hero .lead,.hero .ctas,.hero .micro,.hero .hero-visual{opacity:1;transform:none}
-}
-
-.dashboard-brand-logo{width:24px;height:24px;border-radius:6px;object-fit:cover;box-shadow:0 4px 12px rgba(0,0,0,.16)}
-
-.service-note{padding:15px 18px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.72);color:#738293;font-size:13px;line-height:1.6}
-#assessments .pricing{max-width:900px}
-#assessments .price{min-height:390px}
-@media(max-width:1120px){
-  .pricing{grid-template-columns:repeat(2,1fr)}
-}
-
+<!-- Failsafe: if the external stylesheet never arrives, the page still reads as a dark, styled document instead of raw HTML. -->
+<style>
+  :root{color-scheme:dark;}
+  html{background:#0A1622;}
+  body{margin:0;background:#0A1622;color:#F2F5F8;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",system-ui,sans-serif;line-height:1.5;}
+  img{max-width:100%;display:block;}
 </style>
-<link rel="stylesheet" href="assets/styles.css?v=final-safe" onerror="document.documentElement.classList.add('css-file-failed')">
+<link rel="stylesheet" href="assets/styles.css">
+
+<!-- GA4 with Consent Mode v2: nothing is measured until the visitor accepts. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent','default',{analytics_storage:'denied'});
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E90RM3V15G"></script>
+<script>
+  gtag('js', new Date());
+  gtag('config','G-E90RM3V15G',{anonymize_ip:true});
+</script>
 </head>
 <body>
-<div class="topbar">CIPHER CAPITAL · SECURITYAUDITAI · EVIDENCE FIRST · PRIORITY OVER NOISE <span style="float:right;opacity:.7">Press <b>⌘/Ctrl + K</b> to jump</span></div>
-<header class="site"><div class="wrap nav">
-<a class="brand" href=""><img src="assets/logo.png" alt="CipherCapital" width="48" height="48" decoding="async">CipherCapital</a>
-<nav class="navlinks"><a href="#product">SecurityAuditAI</a><a href="#coverage">Coverage</a><a href="#demo">Demo</a><a href="#pricing">Pricing</a><a href="#assessments">Assessments</a><a href="#assessments">Assessments</a><a href="#tutorial">Tutorials</a></nav>
-<div class="actions"><a class="lang active" href="./">EN</a><a class="lang " href="../nl/">NL</a><a class="btn btn-dark" href="#scan">Run a free scan</a></div>
-</div></header>
 
-<main>
-<section class="hero"><div class="wrap hero-grid">
-<div><div class="eyebrow">CIPHER CAPITAL / SECURITYAUDITAI</div><h1>Find the security issues that actually matter.</h1><p class="lead">SecurityAuditAI scans repositories for secrets, dependency vulnerabilities and infrastructure misconfigurations — then turns raw findings into a report you can act on.</p>
-<div class="ctas"><a class="btn btn-amber" href="#scan">Run a free scan →</a><a class="btn btn-light" href="#tutorial">Watch the tutorials</a></div>
-<div class="micro">No fake customer counts. No invented security claims. Just evidence, tooling and a clear next step.</div></div>
-<div class="panel"><div class="panelbar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="paneltitle">securityauditai / report</span></div>
-<div class="terminal"><div class="score"><strong>78</strong><small>Security score<br><span class="accent">● 2 items need attention</span></small></div>
-<div class="dim">$ securityaudit scan ./repository</div><div class="dim">Collecting evidence...</div><br>
-<div class="ok">✓ secrets check complete</div><div class="warn">⚠ 3 dependency findings</div><div class="warn">⚠ 1 infrastructure finding</div><br>
-<div class="white">Priority: <span class="accent">HIGH</span></div><div class="dim">Why: exposed credential + reachable vulnerable component</div>
-</div></div>
-</div></section>
+<header class="topbar">
+  <div class="shell topbar-in">
+    <a class="mark" href="#top">
+      <img src="assets/logo.png" alt="" width="24" height="24">
+      CipherCapital
+    </a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#coverage">Coverage</a>
+      <a href="#scan">Free scan</a>
+      <a href="#intelligence">Intelligence</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#tutorial">Tutorials</a>
+    </nav>
+    <div class="topbar-end">
+      <span class="lang">
+        <a href="/ciphercapital-hub/" aria-current="page">EN</a>
+        <a href="/ciphercapital-hub/nl/">NL</a>
+      </span>
+      <a class="btn btn-fill" href="#scan">Run a free scan</a>
+    </div>
+  </div>
+</header>
 
-<section class="section" id="product"><div class="wrap">
-<div class="sectionhead"><div><div class="eyebrow">THE PRODUCT</div><h2>Scanning is easy. Knowing what to fix first is hard.</h2></div>
-<p>SecurityAuditAI is designed to sit above the scanners: collect evidence, reduce noise, explain impact and help you move from finding to fix.</p></div>
-<div class="grid3">
-<div class="card"><span class="num">01 / DETECT</span><h3>Find exposure</h3><p>Secrets, dependency vulnerabilities and common infrastructure misconfigurations are surfaced with evidence and location.</p></div>
-<div class="card"><span class="num">02 / UNDERSTAND</span><h3>Explain the risk</h3><p>Instead of a wall of CVE numbers, the report answers the practical question: why should I care?</p></div>
-<div class="card"><span class="num">03 / ACT</span><h3>Fix the right thing</h3><p>Prioritize the issues that deserve attention first, then connect the result to remediation and verification.</p></div>
-</div></div></section>
+<main id="top">
 
-<section class="section darksection"><div class="wrap intelligence">
-<div><div class="eyebrow">CIPHER INTELLIGENCE</div><h2>Less noise. More signal.</h2><p class="muted">The long-term product direction is not another scanner. Existing scanners are sensors; CipherCapital adds the intelligence layer above them.</p>
-<div class="ctas"><a class="btn btn-amber" href="#scan">Run a free scan</a></div></div>
-<div class="callout"><div class="riskrow"><span class="pill hot">PRIORITY</span><span>Credential exposure in production path</span><span class="accent">NOW</span></div>
-<div class="riskrow"><span class="pill">RISK</span><span>Dependency finding with reachable impact</span><span>HIGH</span></div>
-<div class="riskrow"><span class="pill">CONTEXT</span><span>Finding correlated with infrastructure exposure</span><span>REVIEW</span></div>
-<div class="riskrow"><span class="pill">FIX</span><span>Suggested remediation and verification</span><span>NEXT</span></div></div>
-</div></section>
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="shell hero-in">
+      <div>
+        <h1>
+          <span class="line"><span>Find the security</span></span>
+          <span class="line"><span>issues that</span></span>
+          <span class="line"><span>actually matter.</span></span>
+        </h1>
+        <p class="lede">SecurityAuditAI scans a repository for exposed secrets, vulnerable dependencies and infrastructure mistakes — then turns the raw output into something you can act on.</p>
+        <div class="hero-cta">
+          <a class="btn btn-fill" href="#scan">Run a free scan</a>
+          <a class="btn btn-line" href="#intelligence">See how it decides</a>
+        </div>
+        <div class="hero-meta">
+          <div><b><span data-count="2" data-suffix="">0</span> min</b>Typical scan time</div>
+          <div><b><span data-count="3" data-suffix="">0</span> layers</b>Secrets, deps, infra</div>
+          <div><b>€0</b>To try it</div>
+        </div>
+      </div>
 
-<section class="section" id="coverage"><div class="wrap">
-<div class="sectionhead"><div><div class="eyebrow">COVERAGE</div><h2>Built around real security checks.</h2></div><p>Start with proven scanners, then make the output understandable. API and deeper intelligence features can expand over time.</p></div>
-<div class="coverage">
-<div class="coverage-row"><h3>Secrets</h3><p>API keys, passwords, tokens and other high-risk credentials detected in repository content and history where supported.</p><span class="status">GITLEAKS</span></div>
-<div class="coverage-row"><h3>Dependencies</h3><p>Known vulnerabilities in open-source packages, with package/version evidence so you can see exactly what triggered the finding.</p><span class="status">TRIVY</span></div>
-<div class="coverage-row"><h3>Infrastructure</h3><p>Docker, Kubernetes, Terraform and related configuration checks for common security misconfigurations.</p><span class="status">TRIVY</span></div>
-<div class="coverage-row"><h3>Security intelligence</h3><p>Risk context, priority, correlation and remediation workflows are the product layer CipherCapital is building above raw scanner output.</p><span class="status">CIPHER</span></div>
-</div></div></section>
-
-<section class="section" id="scan"><div class="wrap">
-<div class="sectionhead"><div><div class="eyebrow">FREE SECURITY AUDIT</div><h2>Three steps. No security theatre.</h2></div><p>Use the free scan as the easiest entry point into the product. Keep the workflow simple and make the result useful.</p></div>
-<div class="steps">
-<div class="step"><span class="stepno">01</span><h3>Paste the repo</h3><p>Start with a public GitHub repository. No installation required for the free scan.</p></div>
-<div class="step"><span class="stepno">02</span><h3>Run the checks</h3><p>Gitleaks and Trivy inspect the repository for secrets, dependencies and infrastructure issues.</p></div>
-<div class="step"><span class="stepno">03</span><h3>Read the report</h3><p>Get a concise result with evidence, severity and practical next actions.</p></div>
-<div class="step"><span class="stepno">04</span><h3>Fix & verify</h3><p>Use the findings as the starting point for remediation. Verification is the goal, not the scan itself.</p></div>
-</div>
-<div class="ctas"><a class="btn btn-amber" href="mailto:secrapports@outlook.com?subject=SecurityAuditAI%20free%20scan">Run a free scan →</a><span class="micro">For now, the free scan request is handled by email. Product automation can be connected as the backend is expanded.</span></div>
-</div></section>
-
-<section class="section"><div class="wrap report"><div><div class="eyebrow">REPORT PREVIEW</div><h2>A report should tell you what matters.</h2><p class="lead" style="font-size:16px">The interface deliberately looks closer to engineering output than a marketing dashboard: evidence first, context second, action third.</p></div>
-<div class="code"><div class="codehead"><span>repository / security-report</span><span>example</span></div>
-<div class="coderow"><span class="ln">01</span><span>SECRETS · GITLEAKS</span></div><div class="coderow finding"><span class="ln">42</span><span>hardcoded credential → config/legacy.py</span></div>
-<div class="coderow"><span class="ln">43</span><span class="dim">evidence: token-like value detected</span></div>
-<div class="coderow"><span class="ln">52</span><span>DEPENDENCIES · TRIVY</span></div><div class="coderow finding"><span class="ln">—</span><span>package vulnerability → package.json</span></div>
-<div class="coderow"><span class="ln">67</span><span>INFRASTRUCTURE · TRIVY</span></div><div class="coderow finding"><span class="ln">—</span><span>container runs as root → Dockerfile</span></div>
-<div class="coderow"><span class="ln">88</span><span class="white">NEXT: rotate credential · upgrade package · harden image</span></div></div>
-</div></section>
-
-
-<section class="section ux-section" id="demo">
-  <div class="wrap ux-grid">
-    <div>
-      <div class="eyebrow">INTERACTIVE DEMO</div>
-      <h2>See the product logic before you hand it real code.</h2>
-      <p class="lead" style="font-size:16px">This demo is intentionally local and illustrative. It shows the experience — discover evidence, classify it, surface priority — without pretending a live repository was scanned.</p>
-      <div class="timeline">
-        <div class="timeline-item"><h3>01 — collect evidence</h3><p>Bring together secrets, dependency and infrastructure signals.</p></div>
-        <div class="timeline-item"><h3>02 — add context</h3><p>Ask what is exposed, reachable and relevant to the environment.</p></div>
-        <div class="timeline-item"><h3>03 — rank attention</h3><p>Turn a long finding list into a smaller, actionable queue.</p></div>
+      <div class="console" aria-hidden="true">
+        <div class="console-bar">
+          <i></i><i></i><i></i>
+          <span>securityauditai — scan</span>
+        </div>
+        <div class="console-body" data-console='[
+          ["$ securityauditai scan ./repo",""],
+          ["",""],
+          ["Cloning into temporary workspace…","dim"],
+          ["Running gitleaks, trivy…","dim"],
+          ["",""],
+          ["✓ secrets       0 exposed","ok"],
+          ["⚠ dependencies  3 vulnerable","warn"],
+          ["⚠ infrastructure 1 misconfigured","warn"],
+          ["",""],
+          ["Workspace deleted. Report on its way.","dim"]
+        ]'></div>
       </div>
     </div>
-    <div class="demo-shell">
-      <div class="demo-top"><div class="demo-dots"><i></i><i></i><i></i></div><div class="demo-label">SECURITYAUDITAI / DEMO</div></div>
-      <div class="demo-body">
-        <form class="demo-input" id="demoScanForm">
-          <input value="https://github.com/example/repository" aria-label="Repository URL">
-          <button class="btn btn-dark" type="submit">Run demo</button>
-        </form>
-        <div class="micro" style="margin-top:10px">Simulation only · no repository is fetched by this demo.</div>
-        <div class="demo-status">
-          <div class="scan-line"><span class="scan-state"></span>Resolve repository metadata</div>
-          <div class="scan-line"><span class="scan-state"></span>Inspect secrets signal</div>
-          <div class="scan-line"><span class="scan-state"></span>Inspect dependency signal</div>
-          <div class="scan-line"><span class="scan-state"></span>Inspect infrastructure signal</div>
-          <div class="scan-line"><span class="scan-state"></span>Build priority context</div>
+  </section>
+
+  <!-- ================= PROBLEM ================= -->
+  <section class="band band-void">
+    <div class="shell">
+      <div class="head rise">
+        <span class="kicker">The problem</span>
+        <h2>Scanning is easy. Knowing what to fix first is hard.</h2>
+        <p class="body">Point any scanner at a codebase and you get hundreds of findings. Most of them are noise, a few of them will ruin your week, and nothing in the output tells you which is which. That triage is the work — and it's the part that gets skipped.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <article class="card rise">
+          <h3>Evidence, not alerts</h3>
+          <p>Every finding arrives with the file, the line, and the commit it came from. You can confirm it in your own repository before you touch anything.</p>
+        </article>
+        <article class="card rise rise-1">
+          <h3>Written to be read</h3>
+          <p>Scanner output is written for scanners. The report is written for the person who has to decide what happens on Monday morning.</p>
+        </article>
+        <article class="card rise rise-2">
+          <h3>Honest about limits</h3>
+          <p>A static scan catches what static scans catch. Where the tool can't see, the report says so instead of implying clean.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REPORT ================= -->
+  <section class="band">
+    <div class="shell report">
+      <div class="rise">
+        <span class="kicker">Sample output</span>
+        <h2>What actually lands in your inbox.</h2>
+        <p class="body" style="margin-top:1.1em">A real, anonymised excerpt. The interface deliberately looks closer to engineering output than a marketing dashboard: evidence first, context second, action third.</p>
+      </div>
+
+      <div class="sheet rise rise-1" data-sheet>
+        <div class="sheet-head">
+          <span>[anonymised]/api-service</span>
+          <span>2m 14s</span>
         </div>
-        <div class="demo-result">
-          <div class="result-score"><strong>78</strong><span>ILLUSTRATIVE<br>SECURITY SCORE</span></div>
-          <div class="micro" style="margin-top:6px">Demo result for <span id="demoRepoLabel">example/repository</span></div>
-          <div class="result-grid">
-            <div class="result-chip"><b>01</b><small>high attention</small></div>
-            <div class="result-chip"><b>04</b><small>review</small></div>
-            <div class="result-chip"><b>17</b><small>informational</small></div>
+        <div class="sheet-body">
+          <div class="row row-label"><span class="gut"></span><span>SECRETS — gitleaks</span></div>
+          <div class="row row-high"><span class="gut">42</span><span>AWS access key committed in config/legacy_settings.py</span></div>
+          <div class="row row-sub"><span class="gut"></span><span>present in history, not only at HEAD — rotate the key, don't just delete the line</span></div>
+
+          <div class="row row-label"><span class="gut"></span><span>DEPENDENCIES — trivy</span></div>
+          <div class="row row-high"><span class="gut">—</span><span>CVE-2024-XXXXX · lodash 4.17.15 · high · fixed in 4.17.21</span></div>
+          <div class="row row-med"><span class="gut">—</span><span>CVE-2023-XXXXX · express 4.16.0 · medium · fixed in 4.19.2</span></div>
+
+          <div class="row row-label"><span class="gut"></span><span>INFRASTRUCTURE — trivy</span></div>
+          <div class="row row-med"><span class="gut">—</span><span>Dockerfile runs as root — add a non-root USER directive</span></div>
+          <div class="row row-ok"><span class="gut">—</span><span>deployment.yaml missing resource limits</span></div>
+
+          <div class="row row-total"><span class="gut"></span><span>1 secret · 2 dependencies · 2 infrastructure · fix snippets included</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COVERAGE ================= -->
+  <section class="band band-void" id="coverage">
+    <div class="shell">
+      <div class="head rise">
+        <span class="kicker">Coverage</span>
+        <h2>Built on scanners that already earned their place.</h2>
+        <p class="body">Gitleaks and Trivy do the detection — the same tools that run in production pipelines. CipherCapital's work starts where their output ends.</p>
+      </div>
+
+      <div class="cover">
+        <div class="cover-row">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"/></svg>
+            Exposed secrets
+          </h3>
+          <p>API keys, passwords, SSH keys and tokens — including the ones sitting in commit history long after someone deleted the line.</p>
+          <span class="tagpill">Every plan</span>
+        </div>
+        <div class="cover-row">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+            Vulnerable dependencies
+          </h3>
+          <p>Outdated packages matched against published CVE data, with the version that fixes each one.</p>
+          <span class="tagpill">Every plan</span>
+        </div>
+        <div class="cover-row">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+            Infrastructure as code
+          </h3>
+          <p>Dockerfiles, Kubernetes manifests and Terraform — the quiet misconfigurations that leave a door open without anything looking broken.</p>
+          <span class="tagpill">Every plan</span>
+        </div>
+        <div class="cover-row">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3.5 12h4l2.2 5.5 4-11.5 2 6h4.8"/></svg>
+            Live API surface
+          </h3>
+          <p>This needs a running endpoint, not a repository, so it sits outside the static scan. Available as a manual assessment.</p>
+          <span class="tagpill paid">Assessment</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FREE SCAN ================= -->
+  <section class="band" id="scan">
+    <div class="shell">
+      <div class="head rise">
+        <span class="kicker">Free security audit</span>
+        <h2>Three steps. No security theatre.</h2>
+        <p class="body">Paste a public repository, get a report by email. No install, no account, no card.</p>
+      </div>
+
+      <div class="steps rise rise-1">
+        <div class="step">
+          <span class="step-n">1</span>
+          <h3>Send the repository</h3>
+          <p>Any public GitHub repository. Email the URL and it goes into the queue.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">2</span>
+          <h3>It gets scanned</h3>
+          <p>Cloned into a temporary workspace, checked by Gitleaks and Trivy, then the clone is deleted. Usually under two minutes.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">3</span>
+          <h3>You get the report</h3>
+          <p>What was found, where it lives, why it matters, and what fixes it — in plain language.</p>
+        </div>
+      </div>
+
+      <p style="margin-top:32px">
+        <a class="btn btn-fill" href="mailto:secrapports@outlook.com?subject=SecurityAuditAI%20free%20scan">Email your repository URL</a>
+      </p>
+      <p class="fine" style="margin-top:16px">Self-serve scanning from this page is in build. Until it ships, scans are run manually — which means a person reads your report before it reaches you.</p>
+    </div>
+  </section>
+
+  <!-- ================= PINNED STORY ================= -->
+  <section class="story" id="intelligence" data-story aria-label="How CipherCapital decides what matters">
+    <div class="story-track">
+      <div class="story-pin">
+        <div class="shell story-in">
+          <div class="story-copy">
+            <div class="story-step live">
+              <span class="kicker">Cipher intelligence</span>
+              <h2>See what connects.</h2>
+              <p>A single finding rarely tells the whole story. An exposed key matters more when it's still valid, still in history, and still referenced by a running service.</p>
+            </div>
+            <div class="story-step">
+              <span class="kicker">Cipher intelligence</span>
+              <h2>Understand what's dangerous.</h2>
+              <p>Exposure, exploitability and context resolve into one priority — so noise doesn't decide how you spend your day.</p>
+            </div>
+            <div class="story-step">
+              <span class="kicker">Cipher intelligence</span>
+              <h2>Act where it counts.</h2>
+              <p>From finding to concrete remediation. Fix the handful of things that can actually hurt you, and stop pretending the other ninety are urgent.</p>
+            </div>
+            <div class="story-dots" aria-hidden="true"><i class="live"></i><i></i><i></i></div>
           </div>
+
+          <svg class="graph s1" viewBox="0 0 420 340" aria-hidden="true">
+            <circle class="pulse" cx="210" cy="170" r="34"/>
+            <path class="edge edge-1" d="M210 170 L96 92"/>
+            <path class="edge edge-1" d="M210 170 L330 104"/>
+            <path class="edge edge-2" d="M210 170 L84 246"/>
+            <path class="edge edge-2" d="M210 170 L342 238"/>
+            <path class="edge edge-3" d="M96 92 L330 104"/>
+            <path class="edge edge-3" d="M84 246 L342 238"/>
+            <circle class="core" cx="210" cy="170" r="26"/>
+            <circle class="node hot" cx="96" cy="92" r="13"/>
+            <circle class="node hot" cx="330" cy="104" r="13"/>
+            <circle class="node" cx="84" cy="246" r="13"/>
+            <circle class="node" cx="342" cy="238" r="13"/>
+            <circle class="node" cx="210" cy="312" r="11"/>
+            <circle class="node" cx="210" cy="34" r="11"/>
+          </svg>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="section darksection ux-section" id="architecture">
-  <div class="wrap">
-    <div class="sectionhead"><div><div class="eyebrow">HOW CIPHER FITS</div><h2>Security tools are the sensors. CipherCapital is the decision layer.</h2></div><p class="muted">The architecture is designed to grow without throwing away the tooling teams already use.</p></div>
-    <div class="architecture">
-      <div class="arch-node"><span class="num">01 / SENSORS</span><h3>Gitleaks</h3><p>Secrets and credential signals.</p><span class="arch-arrow">→</span></div>
-      <div class="arch-node"><span class="num">02 / SENSORS</span><h3>Trivy</h3><p>Dependencies and infrastructure signals.</p><span class="arch-arrow">→</span></div>
-      <div class="arch-node active"><span class="num">03 / INTELLIGENCE</span><h3>Cipher Intelligence</h3><p>Correlation, context and evidence.</p><span class="arch-arrow">→</span></div>
-      <div class="arch-node active"><span class="num">04 / PRIORITY</span><h3>PRIORITY</h3><p>What deserves attention first.</p><span class="arch-arrow">→</span></div>
-      <div class="arch-node"><span class="num">05 / ACTION</span><h3>Remediate</h3><p>Fix, verify and learn from the change.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="section ux-section" id="findings">
-  <div class="wrap">
-    <div class="sectionhead"><div><div class="eyebrow">EVIDENCE-FIRST FINDINGS</div><h2>Click a finding. Get the “why”, not another wall of text.</h2></div><p>These examples are illustrative UI, designed to show how a production report can keep evidence close to the decision.</p></div>
-    <div class="findings-grid">
-      <article class="finding-card" data-title="Exposed credential" data-why="A credential can turn a code leak into an access problem. The next step should be to validate scope, rotate the secret and verify that the old value is no longer accepted." data-evidence="config/legacy.py:42\nTOKEN = \"••••••••••\"\n\ngitleaks: token-like credential detected">
-        <div class="finding-top"><span class="finding-tag">SECRETS · GITLEAKS</span><span class="pill hot">PRIORITY</span></div><h3>Exposed credential</h3><p>Evidence, likely impact and the first action stay in the same view.</p>
-      </article>
-      <article class="finding-card" data-title="Reachable dependency vulnerability" data-why="A vulnerable package matters more when the affected component is actually used in a reachable path. The report should surface package, version and evidence so the team can decide whether to upgrade, isolate or accept the risk." data-evidence="package.json\n\"package-name\": \"1.4.2\"\n\ntrivy: known vulnerability detected">
-        <div class="finding-top"><span class="finding-tag">DEPENDENCIES · TRIVY</span><span class="pill">HIGH</span></div><h3>Reachable dependency</h3><p>Move from CVE noise toward the package and version that deserve attention.</p>
-      </article>
-      <article class="finding-card" data-title="Container runs as root" data-why="A container running as root can increase the blast radius of a successful compromise. The report should point directly to the configuration and the hardening change to review." data-evidence="Dockerfile:12\nUSER root\n\ntrivy: container configuration check">
-        <div class="finding-top"><span class="finding-tag">INFRASTRUCTURE · TRIVY</span><span class="pill">REVIEW</span></div><h3>Container runs as root</h3><p>Show the exact configuration issue and connect it to a practical hardening step.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="section ux-section" id="integrations">
-  <div class="wrap">
-    <div class="sectionhead"><div><div class="eyebrow">TOOLCHAIN</div><h2>Designed to fit the security workflow you already have.</h2></div><p>Show the ecosystem now, then connect deeper automation as those integrations are actually implemented.</p></div>
-    <div class="integration-grid">
-      <div class="integration"><div class="logolet">GITHUB</div><small>source & PR workflow</small></div>
-      <div class="integration"><div class="logolet">GITLEAKS</div><small>secret detection</small></div>
-      <div class="integration"><div class="logolet">TRIVY</div><small>vuln & config scan</small></div>
-      <div class="integration"><div class="logolet">DOCKER</div><small>image context</small></div>
-      <div class="integration"><div class="logolet">K8S</div><small>cluster config</small></div>
-      <div class="integration"><div class="logolet">CI/CD</div><small>automation layer</small></div>
-    </div>
-  </div>
-</section>
-
-<section class="section ux-section" id="trust">
-  <div class="wrap">
-    <div class="sectionhead"><div><div class="eyebrow">TRUST & TRANSPARENCY</div><h2>Useful precisely because it does not pretend to do more than it does.</h2></div><p>Clear boundaries make a security product easier to trust and easier to improve.</p></div>
-    <div class="trust-grid">
-      <div class="trust-card"><div class="trust-icon">01</div><h3>Evidence over theatre</h3><p>Findings should point back to a file, configuration, package or other concrete evidence whenever the underlying scanner provides it.</p></div>
-      <div class="trust-card"><div class="trust-icon">02</div><h3>No “certified secure” button</h3><p>A scan is an assessment aid. It is not a guarantee that an application is secure, vulnerability-free or compliant.</p></div>
-      <div class="trust-card"><div class="trust-icon">03</div><h3>Verify the backend claims</h3><p>Temporary storage, retention, deletion and privacy statements should match what the production system actually does before they are treated as guarantees.</p></div>
-    </div>
-  </div>
-</section>
-
-<div class="modal" id="findingModal" aria-hidden="true">
-  <div class="modal-card" role="dialog" aria-modal="true">
-    <div class="modal-head"><div><div class="eyebrow">FINDING DETAIL</div><h3 data-modal-title style="margin-top:5px"></h3></div><button class="modal-close" aria-label="Close">×</button></div>
-    <div class="modal-content" data-modal-body></div>
-  </div>
-</div>
-
-
-<section class="section light-2" id="assessments"><div class="wrap">
-  <div class="section-head reveal">
-    <div><div class="eyebrow">CIPHERCAPITAL SERVICES</div><h2>Not ready for a subscription? Start with a security assessment.</h2></div>
-    <p>Turn a single repository review into a concrete security action plan. Use the tooling for the first pass, then add human review when the scope calls for it.</p>
-  </div>
-  <div class="pricing">
-    <div class="price reveal">
-      <div class="name">SECURITY ASSESSMENT</div>
-      <div class="amount">€199<small style="font-size:16px;font-weight:600"> from</small></div>
-      <ul>
-        <li>One repository assessment</li>
-        <li>Automated security checks</li>
-        <li>Evidence-based report</li>
-        <li>Clear remediation priorities</li>
-      </ul>
-      <a class="btn btn-dark" href="mailto:secrapports@outlook.com?subject=CipherCapital%20Security%20Assessment">Request assessment</a>
-    </div>
-    <div class="price featured reveal">
-      <div class="name">DEEP SECURITY ASSESSMENT</div>
-      <div class="amount">Custom</div>
-      <ul>
-        <li>Defined assessment scope</li>
-        <li>Deeper human-led analysis</li>
-        <li>Detailed findings and evidence</li>
-        <li>Remediation discussion and retest planning</li>
-      </ul>
-      <a class="btn btn-amber" href="mailto:secrapports@outlook.com?subject=CipherCapital%20Deep%20Security%20Assessment">Discuss scope</a>
-    </div>
-  </div>
-  <div class="service-note reveal" style="margin-top:20px">Service pricing is scope-dependent. Final deliverables, testing depth and retesting are agreed before work begins.</div>
-</div></section>
-
-<section class="section" id="pricing"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">PLANS</div><h2>Start free. Scale when the workflow proves useful.</h2></div><p>Transparent pricing with the existing CipherCapital plans. Checkout is handled by Stripe.</p></div>
-<div class="pricing">
-<div class="price"><div class="name">Free</div><div class="amount">$0</div><ul><li>1 scan/month</li><li>Report by email</li><li>No card required</li></ul><a class="btn btn-light" href="#scan">Start</a></div>
-<div class="price featured"><div class="name">Pro</div><div class="amount">$49/mo</div><ul><li>Unlimited scans</li><li>Up to 5 repositories</li><li>Remediation snippets</li></ul><a class="btn btn-dark" href="https://buy.stripe.com/5kQ28q4cz7HMgnMaoF1sQ00">Choose Pro</a></div>
-<div class="price"><div class="name">Business</div><div class="amount">$199/mo</div><ul><li>CI/CD workflow</li><li>Team-oriented reporting</li><li>Compliance reporting</li></ul><a class="btn btn-dark" href="https://buy.stripe.com/3cI9AS5gD3rw9Zo68p1sQ01">Choose Business</a></div>
-</div></div></section>
-
-<section class="section" id="about"><div class="wrap about"><div class="portrait"><img src="assets/randy-portrait.png" alt="Randy, founder of CipherCapital" width="400" height="400" loading="lazy"></div><div><div class="eyebrow">ABOUT CIPHERCAPITAL</div><h2>Security work without the vendor theatre.</h2>
-<p>I'm Randy, the person behind CipherCapital and SecurityAuditAI. The goal is practical: take real vulnerabilities, show how they happen, demonstrate how to detect them, and turn the lessons into a product people can actually use.</p>
-<p>CipherCapital is deliberately being built in public through tutorials, security research and the product itself. No invented customer counts or fake testimonials — the proof should be in the work.</p></div></div></section>
-
-<section class="section" id="tutorial"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">YOUTUBE</div><h2>See the checks before you buy the tool.</h2></div><p>Every tutorial is intended to be practical: real issue, real code, real commands and a path to automation.</p></div>
-<div class="panel" style="padding:35px"><div class="eyebrow" style="color:#9eaea5">LATEST VIDEO</div><h3 style="font-size:28px;margin-top:12px">CipherCapital security tutorials</h3><p style="color:#aab7b0">The live video feed belongs on the channel, not in a fake placeholder embed.</p><a class="btn btn-amber" href="https://www.youtube.com/@CipherCapitalCap">Open YouTube channel →</a></div></div></section>
-
-<section class="cipher-story" aria-label="Cipher Intelligence">
-  <div class="cipher-story__sticky">
-    <div class="cipher-story__stage">
-      <div class="cipher-story__copy">
-        <div class="eyebrow">CIPHER INTELLIGENCE</div>
-        <div class="cipher-story__step is-active"><h2>See what connects.</h2><p>A single finding rarely tells the whole story. Cipher Intelligence connects signals into one understandable security context.</p></div>
-        <div class="cipher-story__step"><h2>Understand what is dangerous.</h2><p>exposure, exploitability and context combine into one priority — so noise does not control your day.</p></div>
-        <div class="cipher-story__step"><h2>Act where it matters.</h2><p>Move from finding to concrete remediation. Fix what can actually create impact first.</p></div>
+  <!-- ================= PRICING ================= -->
+  <section class="band" id="pricing">
+    <div class="shell">
+      <div class="head rise">
+        <span class="kicker">Plans</span>
+        <h2>Start free. Pay when the workflow proves itself.</h2>
+        <p class="body">Subscriptions run through Stripe and cancel from your own billing portal, any month, no conversation required.</p>
       </div>
-      <div class="cipher-story__visual" aria-hidden="true">
-        <div class="cipher-orbit"></div><div class="cipher-orbit"></div><div class="cipher-orbit"></div>
-        <span class="cipher-node"></span><span class="cipher-node"></span><span class="cipher-node"></span><span class="cipher-node"></span>
-        <div class="cipher-core">RISK</div>
+
+      <div class="grid grid-3">
+        <article class="card rise">
+          <h3>Free</h3>
+          <span class="price">€0</span>
+          <ul>
+            <li>One scan a month</li>
+            <li>Public repositories</li>
+            <li>Full report by email</li>
+          </ul>
+          <a class="btn btn-quiet" href="#scan">Start here</a>
+        </article>
+
+        <article class="card card-lead rise rise-1">
+          <span class="flag">Most chosen</span>
+          <h3>Pro</h3>
+          <span class="price">$49 <small>/month</small></span>
+          <ul>
+            <li>Unlimited scans, up to 5 repositories</li>
+            <li>Private repositories</li>
+            <li>Fix snippets with each finding</li>
+          </ul>
+          <a class="btn btn-fill" href="https://buy.stripe.com/5kQ28q4cz7HMgnMaoF1sQ00">Choose Pro</a>
+        </article>
+
+        <article class="card rise rise-2">
+          <h3>Business</h3>
+          <span class="price">$199 <small>/month</small></span>
+          <ul>
+            <li>Scan on every commit, via CI/CD</li>
+            <li>Team access</li>
+            <li>SOC 2 / GDPR-ready reporting</li>
+          </ul>
+          <a class="btn btn-quiet" href="https://buy.stripe.com/3cI9AS5gD3rw9Zo68p1sQ01">Choose Business</a>
+        </article>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:18px">
+        <article class="card rise">
+          <h3>Security assessment</h3>
+          <span class="price">from €199</span>
+          <p>A one-off manual review by a person, not a subscription. Repository, live API surface and configuration, with a written verdict and a call to walk through it.</p>
+          <p style="margin-top:22px"><a class="btn btn-line" href="mailto:secrapports@outlook.com?subject=CipherCapital%20Security%20Assessment">Request an assessment</a></p>
+        </article>
+        <article class="card rise rise-1">
+          <h3>Deep assessment</h3>
+          <span class="price">Custom</span>
+          <p>Scoped to your stack when one repository isn't the whole picture — multiple services, cloud configuration, and the paths between them. Priced after a scoping call.</p>
+          <p style="margin-top:22px"><a class="btn btn-line" href="mailto:secrapports@outlook.com?subject=CipherCapital%20Deep%20Security%20Assessment">Start a scoping call</a></p>
+        </article>
       </div>
     </div>
-  </div>
-</section>
-<section class="section"><div class="wrap"><div class="sectionhead"><div><div class="eyebrow">FAQ</div><h2>Before you run a scan.</h2></div></div><div class="faq">
-<details><summary>Is repository code stored?</summary><p>The site currently describes repository content as being cloned to temporary storage for scanning and deleted after the scan. This should remain true in the actual backend before making the claim a production guarantee.</p></details>
-<details><summary>Does the free scan support private repositories?</summary><p>The current free workflow is for public repositories. Private repository support is positioned for paid workflows.</p></details>
-<details><summary>How long does a scan take?</summary><p>Most repositories are intended to finish quickly, but scan time depends on repository size and the checks enabled.</p></details>
-<details><summary>What tools power the scan?</summary><p>Gitleaks is used for secret detection and Trivy for dependency and infrastructure scanning. CipherCapital's value is the product layer around the evidence.</p></details>
-<details><summary>Is CipherCapital a security certification?</summary><p>No. A scan is a security assessment aid, not a guarantee that an application is secure or compliant.</p></details>
-</div></div></section>
+  </section>
 
-<section class="final"><div class="wrap"><div class="finalbox"><div><div class="eyebrow" style="color:#9eaea5">READY WHEN YOU ARE</div><h2 style="color:#fff;margin-top:10px">Find the issues worth fixing.</h2><p>Start with a free repository scan, follow the evidence, and use the result to decide what deserves attention first.</p></div><a class="btn btn-amber" href="#scan">Run a free scan →</a></div></div></section>
+  <!-- ================= TRUST + FAQ ================= -->
+  <section class="band band-void" id="trust">
+    <div class="shell">
+      <div class="head rise">
+        <span class="kicker">Trust</span>
+        <h2>Useful because it doesn't overclaim.</h2>
+      </div>
 
+      <div class="grid grid-2" style="margin-bottom:clamp(44px,6vw,72px)">
+        <article class="card rise">
+          <h3>Your code, briefly and only</h3>
+          <p>The repository is cloned into a temporary workspace for the scan and deleted straight after — on every plan, paid ones included. Nothing is retained, nothing is reused.</p>
+        </article>
+        <article class="card rise rise-1">
+          <h3>Open scanners, checkable results</h3>
+          <p>Detection runs on <a class="textlink" href="https://github.com/gitleaks/gitleaks">Gitleaks</a> and <a class="textlink" href="https://github.com/aquasecurity/trivy">Trivy</a>. You can run the same tools yourself and get the same findings — the value added is the triage, not a black box.</p>
+        </article>
+      </div>
 
+      <div class="faq rise">
+        <details>
+          <summary>Is my code stored anywhere?</summary>
+          <div class="answer"><p>No. It's cloned to a temporary workspace, scanned, and the clone is deleted immediately afterwards. That rule doesn't change on paid plans.</p></div>
+        </details>
+        <details>
+          <summary>Does this work on private repositories?</summary>
+          <div class="answer"><p>Not on the free tier, which covers public repositories only. Private repository access is part of Pro and Business.</p></div>
+        </details>
+        <details>
+          <summary>How long does a scan take?</summary>
+          <div class="answer"><p>Usually under two minutes. Repositories approaching the 300MB limit take longer, and deep commit histories add time on the secrets pass.</p></div>
+        </details>
+        <details>
+          <summary>What counts as a vulnerability?</summary>
+          <div class="answer"><p>Publicly disclosed issues in your dependencies, tracked by CVE identifier, plus known misconfiguration patterns in infrastructure files. It's a match against established databases, not a guess.</p></div>
+        </details>
+        <details>
+          <summary>Is a scan the same as a security audit?</summary>
+          <div class="answer"><p>No, and it's worth being blunt about it. A static scan finds what static scans find. It won't catch business logic flaws, broken access control, or anything that only shows up against a running system. That's what the assessments are for.</p></div>
+        </details>
+        <details>
+          <summary>Which languages and frameworks are supported?</summary>
+          <div class="answer"><p>Dependency and infrastructure scanning covers what Trivy supports out of the box — npm and Node, Python, Java, Go, Ruby, plus Docker, Kubernetes and Terraform files. Secrets detection works across any file type.</p></div>
+        </details>
+        <details>
+          <summary>Can I cancel whenever I want?</summary>
+          <div class="answer"><p>Yes. Pro and Business bill monthly with no contract, and you cancel from your own Stripe billing portal without asking anyone.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="band" id="about">
+    <div class="shell about">
+      <figure class="rise">
+        <img src="assets/randy-portrait.png" alt="Randy, founder of CipherCapital, working at a server rack" width="400" height="400" loading="lazy" data-parallax>
+      </figure>
+      <div class="rise rise-1">
+        <span class="kicker">About</span>
+        <h2>Security work without the vendor theatre.</h2>
+        <p class="body" style="margin-top:1.2em">I'm Randy. I came to this through civil engineering and hands-on IT rather than a large security firm, and that shapes what gets published here: the checks that actually catch things, written down plainly, with the reasoning left in.</p>
+        <p class="body">CipherCapital breaks down real vulnerabilities — committed secrets, ageing dependencies, misconfigured infrastructure, exposed APIs — in walkthroughs you can follow on your own machine. SecurityAuditAI automates the same checks, so you can run across your codebase in two minutes what the tutorial just did by hand.</p>
+        <p class="body">Questions, a correction, or a tutorial you'd like to see: <a class="textlink" href="mailto:secrapports@outlook.com">secrapports@outlook.com</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TUTORIAL ================= -->
+  <section class="band band-void" id="tutorial">
+    <div class="shell">
+      <div class="head rise">
+        <span class="kicker">Tutorials</span>
+        <h2>See the checks before you trust the tool.</h2>
+        <p class="body">Real issue, real code, real commands, and a path to automating it. No slideware.</p>
+      </div>
+
+      <div class="screen rise rise-1">
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/b4Ee-WoaHYw?start=90&amp;rel=0"
+          title="CipherCapital security tutorial"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+      </div>
+
+      <p style="margin-top:28px">
+        <a class="btn btn-line" href="https://www.youtube.com/@CipherCapitalCap">All tutorials on YouTube</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= GEAR ================= -->
+  <section class="band">
+    <div class="shell">
+      <div class="head rise">
+        <span class="kicker">Gear</span>
+        <h2>What's actually on the desk.</h2>
+        <p class="fine" style="margin-top:1.2em;max-width:60ch">As an Amazon Associate, CipherCapital earns from qualifying purchases through these links, at no extra cost to you. Nothing is listed here that isn't in use.</p>
+      </div>
+
+      <div class="gear rise rise-1">
+        <div class="gear-row">
+          <h4>YubiKey 5 NFC</h4>
+          <p>Phishing-resistant second factor for GitHub, Google and everything else that would ruin a week if it fell over.</p>
+          <a class="textlink" href="https://www.amazon.com/dp/B07HBD71HL?tag=ciphercapital-20">View on Amazon</a>
+        </div>
+        <div class="gear-row">
+          <h4>Logitech Brio 4K</h4>
+          <p>The camera in every video on the channel.</p>
+          <a class="textlink" href="https://www.amazon.com/dp/B01N5UOYC4?tag=ciphercapital-20">View on Amazon</a>
+        </div>
+        <div class="gear-row">
+          <h4>Keychron K8</h4>
+          <p>What you hear underneath every terminal recording. Hot-swappable, wired or wireless.</p>
+          <a class="textlink" href="https://www.amazon.com/s?k=Keychron+K8+wireless+mechanical+keyboard&amp;tag=ciphercapital-20">View options</a>
+        </div>
+        <div class="gear-row">
+          <h4>The Web Application Hacker's Handbook</h4>
+          <p>The book most working testers name when asked where they actually learned the craft.</p>
+          <a class="textlink" href="https://www.amazon.com/s?k=The+Web+Application+Hacker%27s+Handbook&amp;tag=ciphercapital-20">View options</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SIGNUP ================= -->
+  <section class="band band-void">
+    <div class="shell">
+      <div class="signup rise">
+        <div>
+          <h2 style="font-size:clamp(1.7rem,1.2rem + 2vw,2.6rem)">The five-minute repository check.</h2>
+          <p class="body" style="margin-top:1em">A manual pass worth running before you push. Leave an email and it comes straight through, along with a note when a new tutorial lands. Sent by hand, not by funnel.</p>
+        </div>
+        <div>
+          <form class="field" data-signup
+                action="https://formspree.io/f/moeqgnar"
+                method="POST"
+                data-sending="Sending…"
+                data-ok="Sent — check your inbox."
+                data-fail="That didn't go through. Use the direct download below.">
+            <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+            <button class="btn btn-fill" type="submit">Send it to me</button>
+          </form>
+          <p class="note" data-note hidden></p>
+          <p class="fine" style="margin-top:14px">
+            <a class="textlink" href="assets/5-minute-repo-security-checklist.pdf">Or download it directly, no email needed</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </main>
-<footer><div class="wrap"><div class="footer"><a class="brand" href="#"><img src="assets/logo.png" alt="CipherCapital" width="48" height="48" decoding="async"></a><div class="footerlinks"><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://www.youtube.com/@CipherCapitalCap">YouTube</a><a href="https://instagram.com/ciphercapitalreall">Instagram</a><a href="https://tiktok.com/@ciphercapital">TikTok</a><a href="mailto:secrapports@outlook.com">Contact</a></div></div><div class="legal">Built by CipherCapital · Security-first · Privacy-conscious · Developer-focused</div></div></footer>
-<script defer src="assets/cipher-motion.js?v=final4"></script>
-<script id="cipher-css-error-guard">
-(function(){
-  try{
-    var l=document.querySelector('link[href*="styles.css"]');
-    if(l){l.addEventListener('error',function(){document.documentElement.classList.add('css-file-failed')},{once:true});}
-  }catch(e){}
-})();
-</script></body></html>
+
+<footer class="foot">
+  <div class="shell">
+    <div class="foot-in">
+      <a class="mark" href="#top">
+        <img src="assets/logo.png" alt="" width="24" height="24">
+        CipherCapital
+      </a>
+      <div class="foot-links">
+        <a href="https://www.youtube.com/@CipherCapitalCap">YouTube</a>
+        <a href="https://instagram.com/ciphercapitalreall">Instagram</a>
+        <a href="https://tiktok.com/@ciphercapital">TikTok</a>
+        <a href="mailto:secrapports@outlook.com">Email</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+    <p class="fine">CipherCapital and SecurityAuditAI are operated by ICT Support By Randy, Amsterdam, the Netherlands. No advertising, no third-party tracking without consent.</p>
+  </div>
+</footer>
+
+<div class="consent" data-consent hidden>
+  <p>One analytics cookie, used to see which tutorials people find useful. No advertising, no data sold.</p>
+  <div>
+    <button class="btn btn-quiet" type="button" data-decline>Decline</button>
+    <button class="btn btn-fill" type="button" data-accept>Accept</button>
+  </div>
+</div>
+
+<script src="assets/cipher-motion.js" defer></script>
+</body>
+</html>
